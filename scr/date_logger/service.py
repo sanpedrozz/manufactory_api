@@ -4,7 +4,12 @@ import os
 import logging
 
 current_dir = os.path.dirname(os.path.abspath(__file__))
-log_file_path = os.path.join(current_dir, "report.log")
+parent_dir = os.path.dirname(current_dir)
+grandparent_dir = os.path.dirname(parent_dir)
+logs_dir = os.path.join(grandparent_dir, "logs")
+os.makedirs(logs_dir, exist_ok=True)
+
+log_file_path = os.path.join(logs_dir, "report.log")
 
 logging.basicConfig(level=logging.DEBUG, format='[%(asctime)s] -> %(message)s', filename=log_file_path)
 logger = logging.getLogger()
