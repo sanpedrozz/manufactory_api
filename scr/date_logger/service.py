@@ -1,8 +1,12 @@
 #   /scr/data_logger/service.py
 
+import os
 import logging
 
-logging.basicConfig(level=logging.DEBUG, format='[%(asctime)s] -> %(message)s', filename='report.log')
+current_dir = os.path.dirname(os.path.abspath(__file__))
+log_file_path = os.path.join(current_dir, "report.log")
+
+logging.basicConfig(level=logging.DEBUG, format='[%(asctime)s] -> %(message)s', filename=log_file_path)
 logger = logging.getLogger()
 
 
