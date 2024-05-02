@@ -2,16 +2,14 @@
 
 import logging
 
-logging.basicConfig(level=logging.DEBUG, format='[%(asctime)s] ->\n%(message)s', filename='report.txt')
+logging.basicConfig(level=logging.DEBUG, format='[%(asctime)s] -> %(message)s', filename='report.log')
 logger = logging.getLogger()
 
 
 def get_data(*data):
     pattern = ('place', 'program', 'data')
-    messege = ''
-    for number, values in enumerate(data):
-        messege += f'{pattern[number]} : {values}\n'
-    logger.debug(messege)
+    message = ' '.join([f'{key}: {value} | ' for key, value in zip(pattern, data)])
+    logger.debug(message)
 
 
 def error_report():

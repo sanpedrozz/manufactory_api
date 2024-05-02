@@ -1,8 +1,9 @@
 #   scr/data_logger/router.py
 
-from workmode import WorkMode
 from fastapi import APIRouter
-from service import get_data, error_report
+
+from scr.date_logger.model import WorkMode
+from scr.date_logger.service import get_data, error_report
 
 date_logger = APIRouter()
 
