@@ -1,10 +1,10 @@
-#   scr/data_logger/model.py
+# src/operation_history/schemas.py
 
 from pydantic import BaseModel
 from typing import Optional, Union
 
 
-class WorkMode(BaseModel):
+class OperationHistory(BaseModel):
     place: Union[str, int]
     program: str
     data: Optional[Union[str, dict]] = None

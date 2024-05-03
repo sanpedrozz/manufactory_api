@@ -1,4 +1,4 @@
-#   /scr/data_logger/service.py
+# /scr/operation_history/service.py
 
 import os
 import logging
@@ -15,7 +15,7 @@ logging.basicConfig(level=logging.DEBUG, format='[%(asctime)s] -> %(message)s', 
 logger = logging.getLogger()
 
 
-def get_data(*data):
+def add_operation_history(*data):
     pattern = ('place', 'program', 'data')
     message = ' '.join([f'{key}: {value} | ' for key, value in zip(pattern, data)])
     logger.debug(message)

@@ -1,15 +1,13 @@
 [tool.poetry]
 name = "manufactory-api"
-version = "0.1.0"
+version = "0.2.0"
 description = ""
 authors = ["petrl <sup686@gmail.com>"]
 readme = "README.md"
 
 [tool.poetry.dependencies]
 python = "^3.12"
-uvicorn = "^0.29.0"
-pydantic = "^2.7.1"
-fastapi = "^0.110.3"
+fastapi = "^0.111.0"
 
 
 [build-system]

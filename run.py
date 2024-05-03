@@ -1,6 +1,6 @@
-#   run.py
+# run.py
 
-from scr import app
+from scr.main import app
 
 if __name__ == "__main__":
     import uvicorn
