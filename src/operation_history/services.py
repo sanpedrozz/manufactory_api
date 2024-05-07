@@ -2,7 +2,8 @@
 
 from sqlalchemy.ext.asyncio import AsyncSession
 from src.operation_history.schemas import OperationHistory as OperationHistorySchema
-from src.db.operation_history import OperationHistory as OperationHistoryDB
+# from src.db.operation_history import OperationHistory as OperationHistoryDB
+from src.db.models import OperationHistory as OperationHistoryDB
 
 
 async def add_operation_history(db: AsyncSession, operation_history_data: OperationHistorySchema):

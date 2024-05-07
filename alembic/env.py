@@ -6,8 +6,7 @@ from sqlalchemy import pool
 from alembic import context
 
 from src.config import settings
-from src.db.operation_history import OperationHistory # noqa
-from src.db.places import Place # noqa
+from src.db.models import OperationHistory # noqa
 
 from src.db.base import Base
 
