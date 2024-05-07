@@ -25,30 +25,33 @@ class Base(DeclarativeBase):
         """
         try:
             db_session.add(self)
-            return await db_session.commit()
+            await db_session.commit()
         except SQLAlchemyError as ex:
+            await db_session.rollback()
             raise HTTPException(
-                status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail=repr(ex)
+                status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+                detail=str(ex)
             ) from ex
 
     async def delete(self, db_session: AsyncSession):
         """
-
+        Delete the current instance from the database
         :param db_session:
         :return:
         """
         try:
             await db_session.delete(self)
             await db_session.commit()
-            return True
         except SQLAlchemyError as ex:
+            await db_session.rollback()
             raise HTTPException(
-                status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail=repr(ex)
+                status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+                detail=repr(ex)
             ) from ex
 
     async def update(self, db: AsyncSession, **kwargs):
         """
-
+        Update fields of the current instance
         :param db:
         :param kwargs
         :return:
@@ -56,19 +59,27 @@ class Base(DeclarativeBase):
         try:
             for k, v in kwargs.items():
                 setattr(self, k, v)
-            return await db.commit()
+            await db.commit()
         except SQLAlchemyError as ex:
+            await db.rollback()
             raise HTTPException(
-                status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail=repr(ex)
+                status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+                detail=repr(ex)
             ) from ex
 
-    async def save_or_update(self, db: AsyncSession):
+    async def add_or_update(self, db: AsyncSession):
+        """
+        Save or update the current instance depending on its state in the database.
+        :param db:
+        :return:
+        """
         try:
             db.add(self)
-            return await db.commit()
+            await db.commit()
         except IntegrityError as exception:
+            await db.rollback()
             if isinstance(exception.orig, UniqueViolationError):
-                return await db.merge(self)
+                await db.merge(self)
             else:
                 raise HTTPException(
                     status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
