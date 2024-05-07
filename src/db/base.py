@@ -18,7 +18,7 @@ class Base(DeclarativeBase):
     def __tablename__(self) -> str:
         return self.__name__.lower()
 
-    async def save(self, db_session: AsyncSession):
+    async def add(self, db_session: AsyncSession):
         """
 
         :param db_session:

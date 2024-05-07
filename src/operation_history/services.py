@@ -11,5 +11,5 @@ async def add_operation_history(db: AsyncSession, operation_history_data: Operat
         program=operation_history_data.program,
         data=operation_history_data.data if operation_history_data.data else ""
     )
-    await new_operation.save(db)  # Используем метод save из базового класса
+    await new_operation.add(db)  # Используем метод save из базового класса
     return new_operation
