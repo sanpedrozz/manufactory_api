@@ -1,7 +1,6 @@
 # src/operation_history/base.py
 
 from typing import Any
-
 from asyncpg import UniqueViolationError
 from fastapi import HTTPException, status
 from sqlalchemy.exc import SQLAlchemyError, IntegrityError
@@ -12,15 +11,15 @@ from sqlalchemy.orm import declared_attr, DeclarativeBase
 class Base(DeclarativeBase):
     id: Any
     __name__: str
-    # Generate __tablename__ automatically
 
     @declared_attr
     def __tablename__(self) -> str:
+        """Automatically generate the table name from the class name."""
         return self.__name__.lower()
 
     async def add(self, db_session: AsyncSession):
         """
-
+        Add the current instance to the database
         :param db_session:
         :return:
         """

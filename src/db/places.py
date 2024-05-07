@@ -2,14 +2,14 @@
 
 from sqlalchemy import Column, BigInteger, Text
 from sqlalchemy.orm import relationship
+
 from src.db.base import Base
 
 
-class Places(Base):
+class Place(Base):
     __tablename__ = "places"
     id = Column(BigInteger, primary_key=True)
     name = Column(Text)
     comment = Column(Text)
 
-    # Опционально: обратная связь с OperationHistory
-    operations = relationship("OperationHistory", back_populates="place")
+    operations = relationship("OperationHistory", back_populates="place", post_update=True)

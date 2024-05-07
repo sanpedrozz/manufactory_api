@@ -6,6 +6,7 @@ from sqlalchemy.orm import relationship
 from datetime import datetime
 
 from src.db.base import Base
+from src.db.places import Place
 
 
 class OperationHistory(Base):
@@ -16,4 +17,4 @@ class OperationHistory(Base):
     data = Column(Text)
     dt_created = Column(DateTime, default=datetime.now)
 
-    place = relationship("Places", back_populates="operations")
+    place = relationship("Place", back_populates="operations")
