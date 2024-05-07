@@ -28,13 +28,14 @@ class Settings(BaseSettings):
         Returns:
             PostgresDsn: The constructed PostgresDsn URL for asyncpg.
         """
-        return MultiHostUrl.build(
+        url = MultiHostUrl.build(
             scheme="postgresql+asyncpg",
             username=self.POSTGRES_USER,
             password=self.POSTGRES_PASSWORD,
             host=self.POSTGRES_HOST,
             path=self.POSTGRES_DB,
         )
+        return str(url)
 
 
 settings = Settings()
