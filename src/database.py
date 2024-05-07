@@ -3,8 +3,8 @@ from collections.abc import AsyncGenerator
 from sqlalchemy.ext.asyncio import create_async_engine
 from sqlalchemy.ext.asyncio import async_sessionmaker
 
-from scr.config import settings as global_settings
-from scr.utils.logging import AppLogger
+from src.config import settings as global_settings
+from src.utils.logging import AppLogger
 
 logger = AppLogger().get_logger()
 

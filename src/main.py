@@ -1,7 +1,7 @@
 # scr/main.py
 
 from fastapi import FastAPI
-from scr.operation_history.router import router as operation_history
+from src.operation_history.router import router as operation_history
 
 app = FastAPI(title="Manufactory API", version="0.2.0")
 
