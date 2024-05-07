@@ -1,31 +1,18 @@
-# src/operation_history/router.py
-
-from fastapi import APIRouter
-
+from fastapi import APIRouter, Depends, HTTPException
+from sqlalchemy.ext.asyncio import AsyncSession
 from src.operation_history.schemas import OperationHistory
-from src.operation_history.services import add_operation_history, error_report
-from src.utils.logging import AppLogger
-from src.db.base import Base
+from src.operation_history.services import add_operation_history
 from src.database import get_db
-
-from datetime import datetime
-
-logger = AppLogger().get_logger()
 
 router = APIRouter()
 
 
 @router.post("/add")
-async def get_work_mode(data: OperationHistory):
-    with get_db() as session:
-        time = datetime.now()
-        place = data.place
-        program = data.program
-        data = data.data
-        try:
-            items = add_operation_history(time, place, program, data)
-            Base.update(session, items)
-        except:
-            items = error_report(time)
-            Base.update(session, items)
-    return place
+async def add_operation_history_endpoint(operation_history_data: OperationHistory, db: AsyncSession = Depends(get_db)):
+    try:
+        operation = await add_operation_history(db, operation_history_data)
+        return {"message": "Operation history added successfully", "operation_id": operation.id}
+    except HTTPException as http_ex:
+        raise http_ex
+    except Exception as ex:
+        raise HTTPException(status_code=500, detail=str(ex))
