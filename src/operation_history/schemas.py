@@ -5,6 +5,6 @@ from typing import Optional, Union
 
 
 class OperationHistory(BaseModel):
-    place: Union[str, int]
+    place: int
     program: str
     data: Optional[Union[str, dict]] = None
