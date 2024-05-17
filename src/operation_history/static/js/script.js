@@ -1,6 +1,6 @@
 async function fetchOperationHistory() {
     try {
-        const response = await fetch('/operation_history/list?limit=10');
+        const response = await fetch('/operation_history/list?limit=100');
         if (!response.ok) {
             throw new Error('Network response was not ok');
         }
