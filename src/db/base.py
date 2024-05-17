@@ -1,9 +1,8 @@
-# src/operation_history/base.py
+# src/db/base.py
 
 from typing import Any
-from asyncpg import UniqueViolationError
 from fastapi import HTTPException, status
-from sqlalchemy.exc import SQLAlchemyError, IntegrityError
+from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import declared_attr, DeclarativeBase
 
@@ -53,7 +52,7 @@ class Base(DeclarativeBase):
         """
         Update fields of the current instance
         :param db:
-        :param kwargs
+        :param kwargs:
         :return:
         """
         try:
@@ -66,24 +65,3 @@ class Base(DeclarativeBase):
                 status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
                 detail=repr(ex)
             ) from ex
-
-    async def add_or_update(self, db: AsyncSession):
-        """
-        Save or update the current instance depending on its state in the database.
-        :param db:
-        :return:
-        """
-        try:
-            db.add(self)
-            await db.commit()
-        except IntegrityError as exception:
-            await db.rollback()
-            if isinstance(exception.orig, UniqueViolationError):
-                await db.merge(self)
-            else:
-                raise HTTPException(
-                    status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
-                    detail=repr(exception),
-                ) from exception
-        finally:
-            await db.close()

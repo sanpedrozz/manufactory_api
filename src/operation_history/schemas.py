@@ -8,3 +8,6 @@ class OperationHistory(BaseModel):
     place: int
     program: str
     data: Optional[Union[str, dict]] = None
+
+    class Config:
+        from_attributes = True
