@@ -6,7 +6,6 @@ from src.operation_history.schemas import OperationHistory
 from src.operation_history.services import (add_operation_history,
                                             get_all_operations)
 from src.database import get_db
-from fastapi.staticfiles import StaticFiles
 
 from fastapi.responses import HTMLResponse
 
@@ -26,8 +25,8 @@ async def add_operation_history_endpoint(operation_history_data: OperationHistor
 
 @router.get("/list", name="list_operation_histories")
 async def get_operation_history_list(
-    db: AsyncSession = Depends(get_db),
-    limit: int = Query(100, title="Limit", description="Limit the number of returned logs", ge=1)
+        db: AsyncSession = Depends(get_db),
+        limit: int = Query(100, title="Limit", description="Limit the number of returned logs", ge=1)
 ):
     try:
         operations = await get_all_operations(db, limit=limit)

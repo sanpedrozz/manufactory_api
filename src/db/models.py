@@ -17,7 +17,7 @@ class OperationHistory(Base):
     id = Column(BigInteger, primary_key=True)
     place_id = Column(Integer, ForeignKey('places.id'))
     program = Column(Text)
-    data = Column(Text)
+    text = Column(Text)
     dt_created = Column(DateTime, default=datetime.now)
 
     place = relationship("Place", back_populates="operations")

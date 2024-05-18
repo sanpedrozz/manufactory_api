@@ -33,7 +33,7 @@ async def get_all_operations(db: AsyncSession, limit: int = 100) -> List[Operati
             OperationHistorySchema(
                 place=op.place_id,
                 program=op.program,
-                data=op.data
+                data=op.text
             ) for op in operations
         ]
     except SQLAlchemyError as ex:
