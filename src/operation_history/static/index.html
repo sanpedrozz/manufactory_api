@@ -8,38 +8,42 @@
         body {
             font-family: Arial, sans-serif;
         }
+
         table {
             width: 100%;
             border-collapse: collapse;
             margin: 20px 0;
         }
+
         table, th, td {
             border: 1px solid #dddddd;
         }
+
         th, td {
             padding: 8px;
             text-align: left;
         }
+
         th {
             background-color: #f2f2f2;
         }
     </style>
 </head>
 <body>
-    <h1>Operation History</h1>
-    <table id="operation-history-table">
-        <thead>
-            <tr>
-                <th>place</th>
-                <th>Program</th>
-                <th>Data</th>
-
-            </tr>
-        </thead>
-        <tbody>
-            <!-- Rows will be added here dynamically -->
-        </tbody>
-    </table>
-    <script src="/static/js/script.js"></script>
+<h1>Operation History</h1>
+<table id="operation-history-table">
+    <thead>
+    <tr>
+        <th>place</th>
+        <th>program</th>
+        <th>text</th>
+        <th>dt_create</th>
+    </tr>
+    </thead>
+    <tbody>
+    <!-- Rows will be added here dynamically -->
+    </tbody>
+</table>
+<script src="/static/js/script.js"></script>
 </body>
 </html>
