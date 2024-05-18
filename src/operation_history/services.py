@@ -1,6 +1,6 @@
 # /src/operation_history/services.py
 import logging
-
+from datetime import datetime
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 
@@ -19,7 +19,8 @@ async def add_operation_history(db: AsyncSession, operation_history_data: Operat
     new_operation = OperationHistoryDB(
         place_id=operation_history_data.place,
         program=operation_history_data.program,
-        data=operation_history_data.data if operation_history_data.data else ""
+        text=operation_history_data.data if operation_history_data.data else "",
+        dt_created=datetime.now(),
     )
     await new_operation.add(db)
     return new_operation
