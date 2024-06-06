@@ -71,7 +71,7 @@ class Camera(Base):
     __tablename__ = "cameras"
     id = Column(BigInteger, primary_key=True, autoincrement=True)
     camera_info = Column(JSON)
-
+    comment = Column(Text)
     places = relationship("Place", back_populates="camera")
 
     @classmethod
