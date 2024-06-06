@@ -44,16 +44,15 @@ class Place(Base):
     __tablename__ = "places"
     id = Column(BigInteger, primary_key=True)
     name = Column(Text)
-    comment = Column(Text)
 
     operations = relationship("OperationHistory", back_populates="place", post_update=True)
 
     @classmethod
     async def get_all(cls, db: AsyncSession) -> List["Place"]:
         """
-        Get all OperationHistory records
+        Get all Place records
         :param db: The database session
-        :return: A list of all OperationHistory records
+        :return: A list of all Place records
         """
         try:
             stmt = select(cls)
