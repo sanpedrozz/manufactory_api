@@ -1,4 +1,4 @@
-# /src/operation_history/router.py
+# src/operation_history/router.py
 
 from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy.ext.asyncio import AsyncSession

@@ -1,4 +1,4 @@
-# scr/config.py
+# src/config.py
 
 from pydantic import PostgresDsn, computed_field
 from pydantic_core import MultiHostUrl
@@ -13,6 +13,9 @@ class Settings(BaseSettings):
     POSTGRES_PASSWORD: str
     POSTGRES_HOST: str
     POSTGRES_DB: str
+
+    CAMERAS_LOGIN: str
+    CAMERAS_PASSWORD: str
 
     @computed_field
     @property

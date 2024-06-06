@@ -1,4 +1,4 @@
-# scr/main.py
+# src/main.py
 
 from fastapi import FastAPI
 from src.operation_history.router import router as operation_history
