@@ -1,6 +1,6 @@
 # scr/db/models.py
 
-from sqlalchemy import Column, ForeignKey, Text, Integer, BigInteger, DateTime
+from sqlalchemy import Column, ForeignKey, Text, Integer, BigInteger, DateTime, JSON
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import relationship
@@ -44,11 +44,38 @@ class Place(Base):
     __tablename__ = "places"
     id = Column(BigInteger, primary_key=True)
     name = Column(Text)
+    camera_id = Column(BigInteger, ForeignKey('cameras.id'))
 
     operations = relationship("OperationHistory", back_populates="place", post_update=True)
+    camera = relationship("Camera", back_populates="places")
 
     @classmethod
     async def get_all(cls, db: AsyncSession) -> List["Place"]:
+        """
+        Get all Place records
+        :param db: The database session
+        :return: A list of all Place records
+        """
+        try:
+            stmt = select(cls)
+            result = await db.execute(stmt)
+            return list(result.scalars().all())
+        except SQLAlchemyError as ex:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail=str(ex)
+            ) from ex
+
+
+class Camera(Base):
+    __tablename__ = "cameras"
+    id = Column(BigInteger, primary_key=True, autoincrement=True)
+    camera_info = Column(JSON)
+
+    places = relationship("Place", back_populates="camera")
+
+    @classmethod
+    async def get_all(cls, db: AsyncSession) -> List["Camera"]:
         """
         Get all Place records
         :param db: The database session
