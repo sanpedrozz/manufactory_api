@@ -1,4 +1,4 @@
-# scr/db/models.py
+# src/db/models.py
 
 from sqlalchemy import Column, ForeignKey, Text, Integer, BigInteger, DateTime, JSON
 from sqlalchemy.exc import SQLAlchemyError
@@ -44,10 +44,9 @@ class Place(Base):
     __tablename__ = "places"
     id = Column(BigInteger, primary_key=True)
     name = Column(Text)
-    camera_id = Column(BigInteger, ForeignKey('cameras.id'))
 
     operations = relationship("OperationHistory", back_populates="place", post_update=True)
-    camera = relationship("Camera", back_populates="places")
+    camera_links = relationship("PlaceCameraLink", back_populates="place")
 
     @classmethod
     async def get_all(cls, db: AsyncSession) -> List["Place"]:
@@ -72,14 +71,15 @@ class Camera(Base):
     id = Column(BigInteger, primary_key=True, autoincrement=True)
     camera_info = Column(JSON)
     comment = Column(Text)
-    places = relationship("Place", back_populates="camera")
+
+    places = relationship("PlaceCameraLink", back_populates="camera")
 
     @classmethod
     async def get_all(cls, db: AsyncSession) -> List["Camera"]:
         """
-        Get all Place records
+        Get all Camera records
         :param db: The database session
-        :return: A list of all Place records
+        :return: A list of all Camera records
         """
         try:
             stmt = select(cls)
@@ -90,3 +90,13 @@ class Camera(Base):
                 status_code=status.HTTP_404_NOT_FOUND,
                 detail=str(ex)
             ) from ex
+
+
+class PlaceCameraLink(Base):
+    __tablename__ = "place_camera_link"
+    id = Column(BigInteger, primary_key=True, autoincrement=True)
+    place_id = Column(BigInteger, ForeignKey('places.id'), nullable=False)
+    camera_id = Column(BigInteger, ForeignKey('cameras.id'), nullable=False)
+
+    place = relationship("Place", back_populates="camera_links")
+    camera = relationship("Camera", back_populates="places")
