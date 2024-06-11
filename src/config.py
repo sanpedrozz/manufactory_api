@@ -17,6 +17,9 @@ class Settings(BaseSettings):
     CAMERAS_LOGIN: str
     CAMERAS_PASSWORD: str
 
+    BOT_TOKEN: str
+    CHAT_ID: str
+
     @computed_field
     @property
     def asyncpg_url(self) -> PostgresDsn:
