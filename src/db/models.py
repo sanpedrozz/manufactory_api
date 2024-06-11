@@ -25,9 +25,9 @@ class OperationHistory(Base):
     @classmethod
     async def get_all(cls, db: AsyncSession) -> List["OperationHistory"]:
         """
-        Get all OperationHistory records
-        :param db: The database session
-        :return: A list of all OperationHistory records
+        Get all OperationHistory records.
+        :param db: The database session.
+        :return: A list of all OperationHistory records.
         """
         try:
             stmt = select(cls)
@@ -52,9 +52,9 @@ class Place(Base):
     @classmethod
     async def get_all(cls, db: AsyncSession) -> List["Place"]:
         """
-        Get all Place records
-        :param db: The database session
-        :return: A list of all Place records
+        Get all Place records.
+        :param db: The database session.
+        :return: A list of all Place records.
         """
         try:
             stmt = select(cls)
@@ -68,6 +68,12 @@ class Place(Base):
 
     @classmethod
     async def get_place_by_id(cls, db: AsyncSession, id: int) -> 'Place':
+        """
+        Get a Place record by ID.
+        :param db: The database session.
+        :param id: The place ID.
+        :return: The Place record.
+        """
         try:
             stmt = select(cls).filter(cls.id == id)
             result = await db.execute(stmt)
@@ -80,7 +86,6 @@ class Place(Base):
                 )
 
             return place
-
         except SQLAlchemyError as ex:
             raise HTTPException(
                 status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
@@ -90,10 +95,10 @@ class Place(Base):
     @classmethod
     async def get_cameras_by_place_id(cls, db: AsyncSession, place_id: int) -> List[Dict]:
         """
-        Get all camera_info by place_id
-        :param db: The database session
-        :param place_id: The place ID
-        :return: A list of camera_info dictionaries
+        Get all camera_info by place_id.
+        :param db: The database session.
+        :param place_id: The place ID.
+        :return: A list of camera_info dictionaries.
         """
         try:
             stmt = (
@@ -111,7 +116,6 @@ class Place(Base):
             ) from ex
 
 
-
 class Camera(Base):
     __tablename__ = "cameras"
     id = Column(BigInteger, primary_key=True, autoincrement=True)
@@ -123,9 +127,9 @@ class Camera(Base):
     @classmethod
     async def get_all(cls, db: AsyncSession) -> List["Camera"]:
         """
-        Get all Camera records
-        :param db: The database session
-        :return: A list of all Camera records
+        Get all Camera records.
+        :param db: The database session.
+        :return: A list of all Camera records.
         """
         try:
             stmt = select(cls)
@@ -158,9 +162,9 @@ class AlarmMessages(Base):
     @classmethod
     async def get_all(cls, db: AsyncSession) -> List["AlarmMessages"]:
         """
-        Get all Alarm
-        :param db: The database session
-        :return: A list of all Alarm records
+        Get all AlarmMessages records.
+        :param db: The database session.
+        :return: A list of all AlarmMessages records.
         """
         try:
             stmt = select(cls)
@@ -174,6 +178,12 @@ class AlarmMessages(Base):
 
     @classmethod
     async def get_alarm_by_id(cls, db: AsyncSession, id: int) -> 'AlarmMessages':
+        """
+        Get an AlarmMessages record by ID.
+        :param db: The database session.
+        :param id: The alarm ID.
+        :return: The AlarmMessages record.
+        """
         try:
             stmt = select(cls).filter(cls.id == id)
             result = await db.execute(stmt)
@@ -186,7 +196,6 @@ class AlarmMessages(Base):
                 )
 
             return alarm
-
         except SQLAlchemyError as ex:
             raise HTTPException(
                 status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
