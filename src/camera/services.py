@@ -3,23 +3,36 @@ import re
 import hashlib
 import subprocess
 import msgpack
+import logging
 
 from aiohttp import ClientSession
 from datetime import timedelta
 from typing import Dict, List
+from random import randint
 
 from src.config import settings
 
-__all__ = ['get_video']
+logger = logging.getLogger(__name__)
+logging.basicConfig(level=logging.INFO)
+
+__all__ = ['get_video', 'dell_video']
 
 HEADERS = {'Content-Type': 'application/x-msgpack'}
 VERSION = 57
 
 
-async def get_video(camera: Dict, current_time) -> str:
+async def get_video(camera: Dict, current_time):# -> Any[str, None]:
     file_name = await _get_h265(camera, current_time)
     file_name = _convert_h265_to_mp4(file_name)
     return file_name
+
+
+def dell_video(path):
+    try:
+        os.remove(path)
+    except subprocess.CalledProcessError as e:
+        print(f"Delete converting file {path}: {e}")
+    return f'{path}'
 
 
 def _get_digest_headers(www_authenticate: str, method: str, url: str, username: str, password: str) -> Dict[str, str]:
@@ -56,7 +69,7 @@ async def _fetch_with_digest_auth(session: ClientSession, url: str, method: str 
         return await response.read()
 
 
-async def _get_h265(camera: Dict, current_time, delta_start: int = 15, delta_end: int = 0) -> str:
+async def _get_h265(camera: Dict, current_time, delta_start: int = 25, delta_end: int = 0) -> str:
     async with ClientSession() as session:
         def format_time_delta(delta: timedelta) -> List[int]:
             return list(map(int, (current_time + delta).strftime("%Y, %m, %d, %H, %M, %S").split(", ")))
@@ -64,7 +77,7 @@ async def _get_h265(camera: Dict, current_time, delta_start: int = 15, delta_end
         start_time = format_time_delta(-timedelta(seconds=delta_start))
         end_time = format_time_delta(timedelta(seconds=delta_end))
 
-        file_name = f'media/m{current_time.strftime("%Y_%m_%d_%H_%M_%S")}'
+        file_name = f'media/m{randint(0, 999999999)}'
         full_name = f'{file_name}.h265'
 
         frames_request_data = msgpack.packb({
@@ -110,13 +123,16 @@ async def _get_h265(camera: Dict, current_time, delta_start: int = 15, delta_end
         return file_name
 
 
-def _convert_h265_to_mp4(file_name: str) -> str:
+def _convert_h265_to_mp4(file_name: str):# -> Any[str, None]:
     ffmpeg = r'C:\ffmpeg\bin\ffmpeg.exe' if os.name == 'nt' else 'ffmpeg'
     command = [ffmpeg, '-loglevel', 'quiet', '-i', f'{file_name}.h265', '-preset', 'ultrafast', '-y',
                f'{file_name}.mp4']
     try:
         subprocess.run(command, check=True, stderr=subprocess.STDOUT)
         os.remove(f'{file_name}.h265')
+        return f'{file_name}.mp4'
+
     except subprocess.CalledProcessError as e:
         print(f"Error converting file {file_name}: {e}")
-    return f'{file_name}.mp4'
+        os.remove(f'{file_name}.h265')
+        return None

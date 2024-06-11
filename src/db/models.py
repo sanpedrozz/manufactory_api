@@ -1,6 +1,6 @@
 # src/db/models.py
 
-from sqlalchemy import Column, ForeignKey, Text, Integer, BigInteger, DateTime, JSON
+from sqlalchemy import Column, ForeignKey, Text, Integer, BigInteger, DateTime, JSON, Boolean
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import relationship
@@ -44,6 +44,7 @@ class Place(Base):
     __tablename__ = "places"
     id = Column(BigInteger, primary_key=True)
     name = Column(Text)
+    tag = Column(Text)
 
     operations = relationship("OperationHistory", back_populates="place", post_update=True)
     camera_links = relationship("PlaceCameraLink", back_populates="place")
@@ -100,3 +101,28 @@ class PlaceCameraLink(Base):
 
     place = relationship("Place", back_populates="camera_links")
     camera = relationship("Camera", back_populates="places")
+
+
+class AlarmMessages(Base):
+    __tablename__ = "alarm_messages"
+    id = Column(BigInteger, primary_key=True)
+    message = Column(Text, nullable=True)
+    tag = Column(Text, nullable=True)
+    camera = Column(Boolean, default=False, nullable=False)
+
+    @classmethod
+    async def get_all(cls, db: AsyncSession) -> List["AlarmMessages"]:
+        """
+        Get all Alarm
+        :param db: The database session
+        :return: A list of all Alarm records
+        """
+        try:
+            stmt = select(cls)
+            result = await db.execute(stmt)
+            return list(result.scalars().all())
+        except SQLAlchemyError as ex:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail=str(ex)
+            ) from ex
