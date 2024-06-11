@@ -13,15 +13,11 @@ class Base(DeclarativeBase):
 
     @declared_attr
     def __tablename__(self) -> str:
-        """Automatically generate the table name from the class name."""
+        """Автоматически генерировать имя таблицы из имени класса."""
         return self.__name__.lower()
 
+    # Добавление экземпляра в базу данных
     async def add(self, db_session: AsyncSession):
-        """
-        Add the current instance to the database
-        :param db_session:
-        :return:
-        """
         try:
             db_session.add(self)
             await db_session.commit()
@@ -32,12 +28,8 @@ class Base(DeclarativeBase):
                 detail=str(ex)
             ) from ex
 
+    # Удаление экземпляра из базы данных
     async def delete(self, db_session: AsyncSession):
-        """
-        Delete the current instance from the database
-        :param db_session:
-        :return:
-        """
         try:
             await db_session.delete(self)
             await db_session.commit()
@@ -48,13 +40,8 @@ class Base(DeclarativeBase):
                 detail=repr(ex)
             ) from ex
 
+    # Обновление полей экземпляра
     async def update(self, db: AsyncSession, **kwargs):
-        """
-        Update fields of the current instance
-        :param db:
-        :param kwargs:
-        :return:
-        """
         try:
             for k, v in kwargs.items():
                 setattr(self, k, v)

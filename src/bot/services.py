@@ -1,7 +1,8 @@
+# src/bot/services.py
+
 from aiogram import Bot
 from aiogram.types import FSInputFile
 from aiogram.utils.media_group import MediaGroupBuilder
-
 from typing import List
 
 from src.config import settings
@@ -18,7 +19,6 @@ async def send_video(paths: List[str], message: str):
             media_group.add(type="video", media=video)
 
         await bot.send_media_group(chat_id=settings.CHAT_ID, media=media_group.build())
-
     except Exception as e:
         error_message = f"{message}\n\nВидео отправить не получилось: {e}"
         await bot.send_message(chat_id=settings.CHAT_ID, text=error_message)

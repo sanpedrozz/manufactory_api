@@ -6,7 +6,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import relationship
 from sqlalchemy.future import select
 from fastapi import HTTPException, status
-from typing import List
+from typing import List, Dict
 from datetime import datetime
 
 from src.db.base import Base
@@ -66,6 +66,51 @@ class Place(Base):
                 detail=str(ex)
             ) from ex
 
+    @classmethod
+    async def get_place_by_id(cls, db: AsyncSession, id: int) -> 'Place':
+        try:
+            stmt = select(cls).filter(cls.id == id)
+            result = await db.execute(stmt)
+            place = result.scalars().first()
+
+            if not place:
+                raise HTTPException(
+                    status_code=status.HTTP_404_NOT_FOUND,
+                    detail=f"Place with id {id} not found"
+                )
+
+            return place
+
+        except SQLAlchemyError as ex:
+            raise HTTPException(
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                detail=str(ex)
+            ) from ex
+
+    @classmethod
+    async def get_cameras_by_place_id(cls, db: AsyncSession, place_id: int) -> List[Dict]:
+        """
+        Get all camera_info by place_id
+        :param db: The database session
+        :param place_id: The place ID
+        :return: A list of camera_info dictionaries
+        """
+        try:
+            stmt = (
+                select(Camera.camera_info)
+                .join(PlaceCameraLink, PlaceCameraLink.camera_id == Camera.id)
+                .join(cls, PlaceCameraLink.place_id == cls.id)
+                .filter(cls.id == place_id)
+            )
+            result = await db.execute(stmt)
+            return result.scalars().all()
+        except SQLAlchemyError as ex:
+            raise HTTPException(
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                detail=str(ex)
+            ) from ex
+
+
 
 class Camera(Base):
     __tablename__ = "cameras"
@@ -124,5 +169,26 @@ class AlarmMessages(Base):
         except SQLAlchemyError as ex:
             raise HTTPException(
                 status_code=status.HTTP_404_NOT_FOUND,
+                detail=str(ex)
+            ) from ex
+
+    @classmethod
+    async def get_alarm_by_id(cls, db: AsyncSession, id: int) -> 'AlarmMessages':
+        try:
+            stmt = select(cls).filter(cls.id == id)
+            result = await db.execute(stmt)
+            alarm = result.scalars().first()
+
+            if not alarm:
+                raise HTTPException(
+                    status_code=status.HTTP_404_NOT_FOUND,
+                    detail=f"Alarm with id {id} not found"
+                )
+
+            return alarm
+
+        except SQLAlchemyError as ex:
+            raise HTTPException(
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
                 detail=str(ex)
             ) from ex

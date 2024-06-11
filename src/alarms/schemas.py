@@ -1,4 +1,4 @@
-# src/operation_history/schemas.py
+# src/alarms/schemas.py
 
 from pydantic import BaseModel
 

@@ -1,3 +1,5 @@
+# src/cameras/services.py
+
 import os
 import re
 import hashlib
@@ -21,7 +23,7 @@ HEADERS = {'Content-Type': 'application/x-msgpack'}
 VERSION = 57
 
 
-async def get_video(camera: Dict, current_time):# -> Any[str, None]:
+async def get_video(camera: Dict, current_time):  # -> Any[str, None]:
     file_name = await _get_h265(camera, current_time)
     file_name = _convert_h265_to_mp4(file_name)
     return file_name
@@ -123,7 +125,7 @@ async def _get_h265(camera: Dict, current_time, delta_start: int = 25, delta_end
         return file_name
 
 
-def _convert_h265_to_mp4(file_name: str):# -> Any[str, None]:
+def _convert_h265_to_mp4(file_name: str):  # -> Any[str, None]:
     ffmpeg = r'C:\ffmpeg\bin\ffmpeg.exe' if os.name == 'nt' else 'ffmpeg'
     command = [ffmpeg, '-loglevel', 'quiet', '-i', f'{file_name}.h265', '-preset', 'ultrafast', '-y',
                f'{file_name}.mp4']
