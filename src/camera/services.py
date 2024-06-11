@@ -18,7 +18,7 @@ VERSION = 57
 
 async def get_video(camera: Dict, current_time) -> str:
     file_name = await _get_h265(camera, current_time)
-    # file_name = _convert_h265_to_mp4(file_name)
+    file_name = _convert_h265_to_mp4(file_name)
     return file_name
 
 

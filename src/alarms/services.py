@@ -11,12 +11,13 @@ from datetime import datetime
 from src.db.models import Camera, Place, PlaceCameraLink
 from src.camera.services import get_video
 from src.alarms.schemas import Alarm
+from src.bot.services import send_video, send_message
 
 logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.INFO)
 
 
-async def send_message(db: AsyncSession, alarm: Alarm):
+async def alarm_message(db: AsyncSession, alarm: Alarm):
     path_list = []
 
     cameras_list = await get_camera_info_by_place_id(db, alarm.place_id)
@@ -24,7 +25,8 @@ async def send_message(db: AsyncSession, alarm: Alarm):
 
     for camera in cameras_list:
         path_list.append(await get_video(camera, current_time))
-        logging.info(f"!!!!!!!!!!!!!!!!!!!!!!! {path_list}")
+
+    logging.info(f"!!!!!!!!!!!!!!!!!!!!!!! {path_list}")
 
 
 async def get_camera_info_by_place_id(db: AsyncSession, place_id: int):

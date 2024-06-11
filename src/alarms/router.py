@@ -2,7 +2,7 @@
 
 from fastapi import APIRouter, Depends
 from src.alarms.schemas import Alarm
-from src.alarms.services import send_message
+from src.alarms.services import alarm_message
 
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -13,5 +13,5 @@ router = APIRouter()
 
 @router.post("/alarm")
 async def read_alarm(alarm: Alarm, db: AsyncSession = Depends(get_db)):
-    await send_message(db, alarm)
+    await alarm_message(db, alarm)
     return alarm
