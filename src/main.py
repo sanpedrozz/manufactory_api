@@ -12,10 +12,10 @@ app.include_router(
     prefix="/operation_history",
     tags=["operation_history"]
 )
-# app.include_router(
-#     alarms,
-#     prefix="/alarms",
-#     tags=["alarms"]
-# )
-#
+app.include_router(
+    alarms,
+    prefix="/alarms",
+    tags=["alarms"]
+)
+
 app.mount("/static", StaticFiles(directory="src/operation_history/static"), name="static")

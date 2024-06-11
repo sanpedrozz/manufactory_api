@@ -5,10 +5,9 @@ import subprocess
 import msgpack
 
 from aiohttp import ClientSession
-from datetime import datetime, timedelta
+from datetime import timedelta
 from typing import Dict, List
 
-from src.camera.schemas import CameraModel
 from src.config import settings
 
 __all__ = ['get_video']
@@ -17,9 +16,9 @@ HEADERS = {'Content-Type': 'application/x-msgpack'}
 VERSION = 57
 
 
-async def get_video(camera: CameraModel) -> str:
-    file_name = await _get_h265(camera)
-    file_name = _convert_h265_to_mp4(file_name)
+async def get_video(camera: Dict, current_time) -> str:
+    file_name = await _get_h265(camera, current_time)
+    # file_name = _convert_h265_to_mp4(file_name)
     return file_name
 
 
@@ -57,10 +56,8 @@ async def _fetch_with_digest_auth(session: ClientSession, url: str, method: str 
         return await response.read()
 
 
-async def _get_h265(camera: CameraModel, delta_start: int = 15, delta_end: int = 0) -> str:
+async def _get_h265(camera: Dict, current_time, delta_start: int = 15, delta_end: int = 0) -> str:
     async with ClientSession() as session:
-        current_time = datetime.now()
-
         def format_time_delta(delta: timedelta) -> List[int]:
             return list(map(int, (current_time + delta).strftime("%Y, %m, %d, %H, %M, %S").split(", ")))
 
@@ -73,7 +70,7 @@ async def _get_h265(camera: CameraModel, delta_start: int = 15, delta_end: int =
         frames_request_data = msgpack.packb({
             "method": "archive.get_frames_list",
             "params": {
-                "channel": camera.cameraId,
+                "channel": camera['cameraId'],
                 "stream": "video",
                 "start_time": start_time,
                 "end_time": end_time
@@ -81,7 +78,7 @@ async def _get_h265(camera: CameraModel, delta_start: int = 15, delta_end: int =
             "version": VERSION
         })
 
-        frames_response_data = await _fetch_with_digest_auth(session, camera.cameraURL, data=frames_request_data,
+        frames_response_data = await _fetch_with_digest_auth(session, camera['cameraURL'], data=frames_request_data,
                                                              headers=HEADERS)
         frames_list = msgpack.unpackb(frames_response_data)
 
@@ -96,13 +93,13 @@ async def _get_h265(camera: CameraModel, delta_start: int = 15, delta_end: int =
             frames_id_list[key_frame - 1].append(frame['id'])
 
         frame_request_args = [{"method": "archive.get_frame",
-                               "params": {"channel": camera.cameraId,
+                               "params": {"channel": camera['cameraId'],
                                           "stream": "video",
                                           "id": frame_id},
                                "version": VERSION} for frame_keys in frames_id_list for frame_id in frame_keys]
         frame_request_data = msgpack.packb(frame_request_args)
 
-        frames_response_data = await _fetch_with_digest_auth(session, camera.cameraURL, data=frame_request_data,
+        frames_response_data = await _fetch_with_digest_auth(session, camera['cameraURL'], data=frame_request_data,
                                                              headers=HEADERS)
         frames = msgpack.unpackb(frames_response_data, raw=True)
 

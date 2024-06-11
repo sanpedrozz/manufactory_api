@@ -6,19 +6,25 @@ from sqlalchemy.orm import joinedload
 from fastapi import HTTPException, status, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.exc import SQLAlchemyError
+from datetime import datetime
 
 from src.db.models import Camera, Place, PlaceCameraLink
 from src.camera.services import get_video
 from src.alarms.schemas import Alarm
-from src.database import get_db
 
 logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.INFO)
 
 
-async def send_message(alarm: Alarm, db: AsyncSession = Depends(get_db)):
-    smth = get_camera_info_by_place_id(db, alarm.place_id)
-    print(smth)
+async def send_message(db: AsyncSession, alarm: Alarm):
+    path_list = []
+
+    cameras_list = await get_camera_info_by_place_id(db, alarm.place_id)
+    current_time = datetime.now()
+
+    for camera in cameras_list:
+        path_list.append(await get_video(camera, current_time))
+        logging.info(f"!!!!!!!!!!!!!!!!!!!!!!! {path_list}")
 
 
 async def get_camera_info_by_place_id(db: AsyncSession, place_id: int):
@@ -37,7 +43,6 @@ async def get_camera_info_by_place_id(db: AsyncSession, place_id: int):
                 detail=f"Place with id {place_id} not found"
             )
 
-        # Extract camera_info from the linked cameras
         camera_info_list = [link.camera.camera_info for link in place.camera_links]
         return camera_info_list
 
