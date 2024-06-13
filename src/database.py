@@ -1,6 +1,5 @@
 # src/database.py
 
-
 from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker
 from src.config import settings as global_settings
 

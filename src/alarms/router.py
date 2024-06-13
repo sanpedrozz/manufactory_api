@@ -10,7 +10,7 @@ from src.database import get_db
 router = APIRouter()
 
 
-@router.post("/alarm")
-async def read_alarm(alarm: Alarm, db: AsyncSession = Depends(get_db)):
+@router.post("/send_alarm")
+async def send_alarm(alarm: Alarm, db: AsyncSession = Depends(get_db)):
     await alarm_message(db, alarm)
     return alarm
