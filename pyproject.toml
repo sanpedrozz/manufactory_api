@@ -2,14 +2,14 @@
 name = "manufactory-api"
 version = "0.2.0"
 description = ""
-authors = ["petrl <sup686@gmail.com>"]
+authors = ["sanpedro"]
 readme = "README.md"
 
 [tool.poetry.dependencies]
 python = "^3.12"
 fastapi = "^0.111.0"
-sqlalchemy = "^2.0.29"
-pydantic-settings = "^2.2.1"
+sqlalchemy = "^2.0.30"
+pydantic-settings = "^2.3.2"
 asyncpg = "^0.29.0"
 alembic = "^1.13.1"
 msgpack = "^1.0.8"
