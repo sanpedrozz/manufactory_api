@@ -2,7 +2,7 @@
 name = "manufactory-api"
 version = "0.2.0"
 description = ""
-authors = ["sanpedro"]
+authors = ["sanpedro <sup686@gmail.com>"]
 readme = "README.md"
 
 [tool.poetry.dependencies]
