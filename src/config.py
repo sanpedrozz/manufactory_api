@@ -17,6 +17,8 @@ class Settings(BaseSettings):
     CAMERAS_LOGIN: str
     CAMERAS_PASSWORD: str
 
+    BOT_TOKEN_TEST: str
+    CHAT_ID_TEST: str
     BOT_TOKEN: str
     CHAT_ID: str
 
