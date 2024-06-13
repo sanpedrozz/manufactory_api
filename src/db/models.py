@@ -67,22 +67,22 @@ class Place(Base):
             ) from ex
 
     @classmethod
-    async def get_place_by_id(cls, db: AsyncSession, id: int) -> 'Place':
+    async def get_place_by_id(cls, db: AsyncSession, place_id: int) -> 'Place':
         """
         Get a Place record by ID.
         :param db: The database session.
-        :param id: The place ID.
+        :param place_id: The place ID.
         :return: The Place record.
         """
         try:
-            stmt = select(cls).filter(cls.id == id)
+            stmt = select(cls).filter(cls.id == place_id)
             result = await db.execute(stmt)
             place = result.scalars().first()
 
             if not place:
                 raise HTTPException(
                     status_code=status.HTTP_404_NOT_FOUND,
-                    detail=f"Place with id {id} not found"
+                    detail=f"Place with id {place_id} not found"
                 )
 
             return place
@@ -177,22 +177,22 @@ class AlarmMessages(Base):
             ) from ex
 
     @classmethod
-    async def get_alarm_by_id(cls, db: AsyncSession, id: int) -> 'AlarmMessages':
+    async def get_alarm_by_id(cls, db: AsyncSession, alarm_id: int) -> 'AlarmMessages':
         """
         Get an AlarmMessages record by ID.
         :param db: The database session.
-        :param id: The alarm ID.
+        :param alarm_id: The alarm ID.
         :return: The AlarmMessages record.
         """
         try:
-            stmt = select(cls).filter(cls.id == id)
+            stmt = select(cls).filter(cls.id == alarm_id)
             result = await db.execute(stmt)
             alarm = result.scalars().first()
 
             if not alarm:
                 raise HTTPException(
                     status_code=status.HTTP_404_NOT_FOUND,
-                    detail=f"Alarm with id {id} not found"
+                    detail=f"Alarm with id {alarm_id} not found"
                 )
 
             return alarm
