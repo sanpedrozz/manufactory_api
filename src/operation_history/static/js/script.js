@@ -27,4 +27,5 @@ window.onload = function() {
     fetchOperationHistory();
     // Set interval to refresh data every second
     setInterval(fetchOperationHistory, 1000);
+
 };
