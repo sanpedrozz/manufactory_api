@@ -13,7 +13,7 @@ from src.alarms.schemas import Alarm
 from src.bot.services import send_video, send_message
 
 
-async def alarm_message_send(db: AsyncSession, alarm: Alarm):
+async def alarm_message(db: AsyncSession, alarm: Alarm):
     current_time = datetime.now()
 
     # Сборка данных для сообщения

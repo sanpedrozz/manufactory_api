@@ -44,6 +44,7 @@ class Place(Base):
     __tablename__ = "places"
     id = Column(BigInteger, primary_key=True)
     name = Column(Text)
+    tag = Column(Text)
     message_thread_id = Column(String, default="General", nullable=False)
 
     operations = relationship("OperationHistory", back_populates="place", post_update=True)
