@@ -1,6 +1,6 @@
 # src/db/models.py
 
-from sqlalchemy import Column, ForeignKey, Text, Integer, BigInteger, DateTime, JSON, Boolean
+from sqlalchemy import Column, ForeignKey, Text, Integer, BigInteger, DateTime, JSON, Boolean, String
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import relationship
@@ -45,6 +45,7 @@ class Place(Base):
     id = Column(BigInteger, primary_key=True)
     name = Column(Text)
     tag = Column(Text)
+    message_thread_id = Column(String, default="General", nullable=False)
 
     operations = relationship("OperationHistory", back_populates="place", post_update=True)
     camera_links = relationship("PlaceCameraLink", back_populates="place")
