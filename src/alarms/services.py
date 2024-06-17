@@ -38,9 +38,9 @@ async def alarm_message(db: AsyncSession, alarm: Alarm):
                        f'#ВИДЕО_НЕ_ПОЛУЧИЛОСЬ_ВЫГРУЗИТЬ')
 
     if path_list:
-        await send_video(path_list, message)
+        await send_video(path_list, message, place.message_thread_id)
     else:
-        await send_message(message)
+        await send_message(message, place.message_thread_id)
 
     for path in path_list:
         dell_video(path)
