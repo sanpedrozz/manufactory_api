@@ -30,12 +30,12 @@ async def alarm_message(db: AsyncSession, alarm: Alarm):
     cameras_list = await Place.get_cameras_by_place_id(db, alarm.place_id)
     path_list = []
     for camera in cameras_list:
-        path = await get_video(camera, current_time)
+        path = await get_video(camera.camera_info, current_time)
         if path is not None:
             path_list.append(path)
         else:
             message = (f'{message}\n'
-                       f'#ВИДЕО_НЕ_ПОЛУЧИЛОСЬ_ВЫГРУЗИТЬ')
+                       f'#ВИДЕО_НЕ_ПОЛУЧИЛОСЬ_ВЫГРУЗИТЬ_КАМЕРА_{camera.comment}')
 
     if path_list:
         await send_video(path_list, message, place.message_thread_id)

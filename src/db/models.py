@@ -103,7 +103,7 @@ class Place(Base):
         """
         try:
             stmt = (
-                select(Camera.camera_info)
+                select(Camera)
                 .join(PlaceCameraLink, PlaceCameraLink.camera_id == Camera.id)
                 .join(cls, PlaceCameraLink.place_id == cls.id)
                 .filter(cls.id == place_id)
