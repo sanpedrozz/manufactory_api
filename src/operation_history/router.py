@@ -58,3 +58,4 @@ async def get_operation_list(
 async def get_index():
     with open("src/operation_history/static/index.html") as f:
         return HTMLResponse(content=f.read(), status_code=200)
+
