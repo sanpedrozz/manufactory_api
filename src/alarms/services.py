@@ -24,7 +24,7 @@ async def alarm_message(db: AsyncSession, alarm: Alarm):
     message = (f'Место аварии: {place.name}\n'
                f'Точное время: {current_time}\n'
                f'Авария: {alarm_data.message}\n'
-               f'{place.tag} {alarm_data.tag}')
+               f'{alarm_data.tag}')
 
     # Выгрузка видео
     cameras_list = await Place.get_cameras_by_place_id(db, alarm.place_id)
