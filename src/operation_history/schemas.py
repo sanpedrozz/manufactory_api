@@ -9,7 +9,6 @@ class OperationHistory(BaseModel):
     place: int
     program: str
     data: Optional[Union[str, dict]] = None
-    created_at: datetime
 
     class Config:
         from_attributes = True
