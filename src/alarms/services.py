@@ -6,8 +6,8 @@ from fastapi import HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.exc import SQLAlchemyError
 from datetime import datetime
-
-from src.db.models import Place, PlaceCameraLink, AlarmMessages
+from src.db.model.place import Place
+from src.db.models import  PlaceCameraLink, AlarmMessages
 from src.camera.services import get_video, dell_video
 from src.alarms.schemas import Alarm
 from src.bot.services import send_video, send_message

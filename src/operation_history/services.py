@@ -6,7 +6,8 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 
 from src.operation_history.schemas import OperationHistory as OperationHistorySchema
-from src.db.models import OperationHistory as OperationHistoryDB
+from src.db.model.operationhistory import OperationHistory as OperationHistoryDB
+from src.db.repo.operationhistoryrepo import OperationHistoryRepo
 from typing import List
 from fastapi import HTTPException, status
 from sqlalchemy.exc import SQLAlchemyError
@@ -30,16 +31,20 @@ async def add_operation_history(db: AsyncSession, operation_history_data: Operat
 
 async def get_all_operations(db: AsyncSession, limit: int = 100) -> List[OperationHistorySchema]:
     try:
-        result = await db.execute(select(OperationHistoryDB).order_by(desc(OperationHistoryDB.dt_created)).limit(limit))
-        operations = result.scalars().all()
-        return [
+        repo = OperationHistoryRepo()
+        # result = await db.execute(select(OperationHistoryDB).order_by(desc(OperationHistoryDB.dt_created)).limit(limit))
+        # operations = result.scalars().all()
+        logger.info('@'*80)
+        ans =  [
             OperationHistorySchema(
                 place=op.place_id,
                 program=op.program,
                 data=op.text,
                 created_at=op.dt_created,
-            ) for op in operations
+            ) for op in await OperationHistoryRepo.get_all(db, limit=limit)
         ]
+        logger.info(ans)
+        return ans
     except SQLAlchemyError as ex:
         logger.error(f"Database error: {ex}")
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=f"Database error: {ex}")
