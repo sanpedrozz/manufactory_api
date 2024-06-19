@@ -14,7 +14,7 @@ from sqlalchemy import desc
 from sqlalchemy.sql.expression import func
 
 logger = logging.getLogger(__name__)
-logging.basicConfig(level=logging.INFO)
+logging.basicConfig(level=logging.DEBUG)
 
 
 async def add_operation_history(db: AsyncSession, operation_history_data: OperationHistorySchema):
