@@ -6,8 +6,10 @@ from fastapi import HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.exc import SQLAlchemyError
 from datetime import datetime
+from src.db.repo.placerepo import PlaceRepo
+from src.db.model.placecameralink import PlaceCameraLink
 from src.db.model.place import Place
-from src.db.models import  PlaceCameraLink, AlarmMessages
+from src.db.repo.alarmmessagesrepo import AlarmMessagesRepo
 from src.camera.services import get_video, dell_video
 from src.alarms.schemas import Alarm
 from src.bot.services import send_video, send_message
@@ -17,8 +19,8 @@ async def alarm_message_send(db: AsyncSession, alarm: Alarm):
     current_time = datetime.now()
 
     # Сборка данных для сообщения
-    place = await Place.get_place_by_id(db, alarm.place_id)
-    alarm_data = await AlarmMessages.get_alarm_by_id(db, alarm.alarm)
+    place = await PlaceRepo.get_place_by_id(db, alarm.place_id)
+    alarm_data = await AlarmMessagesRepo.get_alarm_by_id(db, alarm.alarm)
 
     # Сборка сообщения
     message = (f'Место аварии: {place.name}\n'
@@ -27,7 +29,7 @@ async def alarm_message_send(db: AsyncSession, alarm: Alarm):
                f'{alarm_data.tag}')
 
     # Выгрузка видео
-    cameras_list = await Place.get_cameras_by_place_id(db, alarm.place_id)
+    cameras_list = await PlaceRepo.get_cameras_by_place_id(db, alarm.place_id)
     path_list = []
     for camera in cameras_list:
         path = await get_video(camera.camera_info, current_time)

@@ -1,13 +1,5 @@
 # src/db/model.py
 
-from sqlalchemy import Column, ForeignKey, Text, Integer, BigInteger, DateTime, JSON, Boolean, String
-from sqlalchemy.exc import SQLAlchemyError
-from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy.orm import relationship
-from sqlalchemy.future import select
-from fastapi import HTTPException, status
-from typing import List, Dict
-from datetime import datetime
 from typing import TypeVar, List
 #from src.db.model import OperationHistory
 

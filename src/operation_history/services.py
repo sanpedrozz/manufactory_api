@@ -34,8 +34,7 @@ async def get_all_operations(db: AsyncSession, limit: int = 100) -> List[Operati
         repo = OperationHistoryRepo()
         # result = await db.execute(select(OperationHistoryDB).order_by(desc(OperationHistoryDB.dt_created)).limit(limit))
         # operations = result.scalars().all()
-        logger.info('@'*80)
-        ans =  [
+        ans = [
             OperationHistorySchema(
                 place=op.place_id,
                 program=op.program,
