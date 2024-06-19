@@ -1,5 +1,5 @@
 from src.db.repo._base_repo import BaseRepo
-from src.db.model.operationhistory import OperationHistory
+from src.db.model.camera import Camera
 
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -8,21 +8,18 @@ from fastapi import HTTPException, status
 from typing import List
 
 
-class OperationHistoryRepo(BaseRepo):
-    model = OperationHistory
+class CameraRepo(BaseRepo):
+    model = Camera
 
     @classmethod
-    async def get_all(cls, db: AsyncSession, limit: int | None = None) -> List[model]:
+    async def get_all(cls, db: AsyncSession) -> List[model]:
         """
-        Get all records.
+        Get all Camera records.
         :param db: The database session.
-        :return: A list of all records.
+        :return: A list of all Camera records.
         """
         try:
-            if limit:
-                stmt = select(cls.model).limit(limit)
-            else:
-                stmt = select(cls.model)
+            stmt = select(cls.model)
             result = await db.execute(stmt)
             return list(result.scalars().all())
         except SQLAlchemyError as ex:

@@ -1,15 +1,13 @@
-from sqlalchemy import Column, ForeignKey, Text, Integer, BigInteger, DateTime, JSON, Boolean, String
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy.orm import relationship
 from sqlalchemy.future import select
 from fastapi import HTTPException, status
 from typing import List, Dict
-from datetime import datetime
-from typing import TypeVar, List
 
-from _base_repo import BaseRepo
+from src.db.repo._base_repo import BaseRepo
 from src.db.model.place import Place
+from src.db.model.camera import Camera
+from src.db.model.placecameralink import PlaceCameraLink
 
 
 class PlaceRepo(BaseRepo):
@@ -23,7 +21,7 @@ class PlaceRepo(BaseRepo):
         :return: A list of all Place records.
         """
         try:
-            stmt = select(cls)
+            stmt = select(cls.model)
             result = await db.execute(stmt)
             return list(result.scalars().all())
         except SQLAlchemyError as ex:
@@ -33,7 +31,7 @@ class PlaceRepo(BaseRepo):
             ) from ex
 
     @classmethod
-    async def get_place_by_id(cls, db: AsyncSession, place_id: int) -> model:
+    async def get_place_by_id(cls, db: AsyncSession, place_id: int) -> Place:
         """
         Get a Place record by ID.
         :param db: The database session.
@@ -41,7 +39,7 @@ class PlaceRepo(BaseRepo):
         :return: The Place record.
         """
         try:
-            stmt = select(cls).filter(cls.id == place_id)
+            stmt = select(cls.model).filter(cls.model.id == place_id)
             result = await db.execute(stmt)
             place = result.scalars().first()
 
@@ -70,8 +68,8 @@ class PlaceRepo(BaseRepo):
             stmt = (
                 select(Camera)
                 .join(PlaceCameraLink, PlaceCameraLink.camera_id == Camera.id)
-                .join(cls, PlaceCameraLink.place_id == cls.id)
-                .filter(cls.id == place_id)
+                .join(cls.model, PlaceCameraLink.place_id == cls.model.id)
+                .filter(cls.model.id == place_id)
             )
             result = await db.execute(stmt)
             return result.scalars().all()

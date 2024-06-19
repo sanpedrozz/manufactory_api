@@ -6,7 +6,12 @@ from sqlalchemy import pool
 from alembic import context
 
 from src.config import settings
-from src.db.models import OperationHistory # noqa
+from src.db.model.operationhistory import OperationHistory # noqa
+from src.db.model.program import Program # noqa
+from src.db.model.camera import Camera # noqa
+from src.db.model.place import Place # noqa
+from src.db.model.placecameralink import PlaceCameraLink # noqa
+from src.db.model.alarmmessages import AlarmMessages # noqa
 
 from src.db.base import Base
 
@@ -20,6 +25,7 @@ if config.config_file_name is not None:
     fileConfig(config.config_file_name)
 
 config.set_main_option("sqlalchemy.url", settings.asyncpg_url + "?async_fallback=True")
+
 # add your model's MetaData object here
 # for 'autogenerate' support
 # from myapp import mymodel
