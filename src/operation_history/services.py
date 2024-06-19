@@ -1,6 +1,5 @@
 # src/operation_history/services.py
 
-import logging
 from datetime import datetime
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
@@ -12,9 +11,6 @@ from fastapi import HTTPException, status
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy import desc
 from sqlalchemy.sql.expression import func
-
-logger = logging.getLogger(__name__)
-logging.basicConfig(level=logging.ERROR)
 
 
 async def add_operation_history(db: AsyncSession, operation_history_data: OperationHistorySchema):
@@ -41,10 +37,8 @@ async def get_all_operations(db: AsyncSession, limit: int = 100) -> List[Operati
             ) for op in operations
         ]
     except SQLAlchemyError as ex:
-        logger.error(f"Database error: {ex}")
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=f"Database error: {ex}")
     except Exception as ex:
-        logger.error(f"Unexpected error: {ex}")
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=f"Unexpected error: {ex}")
 
 

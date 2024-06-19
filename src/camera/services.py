@@ -5,7 +5,6 @@ import re
 import hashlib
 import subprocess
 import msgpack
-import logging
 
 from aiohttp import ClientSession
 from datetime import timedelta
@@ -13,9 +12,6 @@ from typing import Dict, List
 from random import randint
 
 from src.config import settings
-
-logger = logging.getLogger(__name__)
-logging.basicConfig(level=logging.ERROR)
 
 __all__ = ['get_video', 'dell_video']
 
