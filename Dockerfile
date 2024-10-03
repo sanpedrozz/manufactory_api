@@ -8,7 +8,6 @@ ENV PYTHONDONTWRITEBYTECODE=on
 ENV PYTHONFAULTHANDLER=on
 ENV PYTHONUNBUFFERED=on
 
-# Установка зависимостей для сборки
 RUN DEBIAN_FRONTEND=noninteractive apt-get update && \
     DEBIAN_FRONTEND=noninteractive apt-get install -yq --no-install-recommends \
     curl \
@@ -36,7 +35,6 @@ ENV PYTHONDONTWRITEBYTECODE=on
 ENV PYTHONFAULTHANDLER=on
 ENV PYTHONUNBUFFERED=on
 
-# Установка необходимых инструментов для выполнения
 RUN DEBIAN_FRONTEND=noninteractive apt-get update && \
     DEBIAN_FRONTEND=noninteractive apt-get install -yq --no-install-recommends \
     curl \
@@ -53,7 +51,10 @@ COPY . /scr/
 
 ENV PATH="/root/.local/bin:$PATH"
 
+# Отладка пути и содержимого директории
+RUN echo $PATH && ls /root/.local/bin
+
 EXPOSE 7000
 
 # Запуск приложения
-CMD ["poetry", "run", "uvicorn", "run:app", "--host", "0.0.0.0", "--port", "7000"]
+CMD ["/root/.local/bin/poetry", "run", "uvicorn", "run:app", "--host", "0.0.0.0", "--port", "7000"]
