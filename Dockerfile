@@ -1,5 +1,5 @@
 # Этап сборки зависимостей
-FROM python:3.13.0rc3-alpine3.20 as builder
+FROM python:3.12.7-alpine3.20 as builder
 
 ENV TZ=Europe/Moscow
 ENV POETRY_VERSION=1.7.0
