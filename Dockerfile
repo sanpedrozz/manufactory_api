@@ -1,5 +1,5 @@
-# Основной этап
-FROM python:3.12.7-slim-bookworm AS base
+# Этап сборки зависимостей
+FROM python:3.12.7-slim-bookworm AS builder
 
 ENV TZ=Europe/Moscow
 ENV PIP_DISABLE_PIP_VERSION_CHECK=on
