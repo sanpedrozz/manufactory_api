@@ -1,5 +1,5 @@
 # Этап сборки зависимостей
-FROM python:3.12.7-slim-bookworm as builder
+FROM python:3.12.7-slim-bookworm AS builder
 
 ENV TZ=Europe/Moscow
 ENV POETRY_VERSION=1.7.0
@@ -29,7 +29,7 @@ COPY pyproject.toml poetry.lock ./
 RUN poetry install --no-interaction --no-ansi -vvv
 
 # Основной этап
-FROM python:3.12.7-slim-bookworm as base
+FROM python:3.12.7-slim-bookworm AS base
 
 ENV TZ=Europe/Moscow
 ENV PIP_DISABLE_PIP_VERSION_CHECK=on
