@@ -9,17 +9,17 @@ ENV TZ=Europe/Moscow \
     PYTHONFAULTHANDLER=on \
     PYTHONUNBUFFERED=on
 
-# Установка зависимостей для сборки и Poetry в одном слое
+# Установка зависимостей для сборки
 RUN DEBIAN_FRONTEND=noninteractive apt-get update && \
     DEBIAN_FRONTEND=noninteractive apt-get install -yq --no-install-recommends \
     curl \
     tzdata && \
     ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && \
     echo $TZ > /etc/timezone && \
-    pip install "poetry==$POETRY_VERSION" && \
-    poetry config virtualenvs.create false && \
-    apt-get purge --auto-remove -y curl tzdata && \
-    apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+    rm -rf /var/lib/apt/lists/*
+
+# Установка Poetry
+RUN pip install "poetry==$POETRY_VERSION" && poetry config virtualenvs.create false
 
 WORKDIR /scr
 
