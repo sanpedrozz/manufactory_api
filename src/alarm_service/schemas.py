@@ -5,4 +5,4 @@ from pydantic import BaseModel
 class Alarm(BaseModel):
     place_id: int
     alarm: int
-    details: Optional[str] = None
+    comment: Optional[str] = None
