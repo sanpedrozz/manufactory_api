@@ -9,17 +9,17 @@ ENV TZ=Europe/Moscow \
     PYTHONFAULTHANDLER=on \
     PYTHONUNBUFFERED=on
 
-# Установка зависимостей для сборки
+# Установка зависимостей для сборки и Poetry в одном слое
 RUN DEBIAN_FRONTEND=noninteractive apt-get update && \
     DEBIAN_FRONTEND=noninteractive apt-get install -yq --no-install-recommends \
     curl \
     tzdata && \
     ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && \
     echo $TZ > /etc/timezone && \
-    rm -rf /var/lib/apt/lists/*
-
-# Установка Poetry
-RUN pip install "poetry==$POETRY_VERSION" && poetry config virtualenvs.create false
+    pip install "poetry==$POETRY_VERSION" && \
+    poetry config virtualenvs.create false && \
+    apt-get purge --auto-remove -y curl tzdata && \
+    apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 WORKDIR /scr
 
@@ -32,4 +32,5 @@ COPY . /scr/
 
 EXPOSE 7000
 
-CMD ["poetry", "run", "uvicorn", "run:app", "--host", "0.0.0.0", "--port", "7000"]
+# Запуск uvicorn напрямую без poetry run
+CMD ["uvicorn", "run:app", "--host", "0.0.0.0", "--port", "7000"]
