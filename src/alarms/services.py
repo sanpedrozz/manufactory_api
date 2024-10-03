@@ -7,7 +7,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.exc import SQLAlchemyError
 from datetime import datetime
 
-from src.db.models import Place, PlaceCameraLink, AlarmMessages
+from src.db.models import Place, AlarmMessages
 from src.alarms.schemas import Alarm
 from src.bot.services import send_video, send_message
 

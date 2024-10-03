@@ -2,7 +2,7 @@
 FROM python:3.12.7-slim-bookworm AS builder
 
 ENV TZ=Europe/Moscow \
-    POETRY_VERSION=1.8.2 \
+    POETRY_VERSION=1.7.0 \
     PIP_DISABLE_PIP_VERSION_CHECK=on \
     PIP_NO_CACHE_DIR=off \
     PYTHONDONTWRITEBYTECODE=on \
