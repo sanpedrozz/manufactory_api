@@ -5,7 +5,7 @@ from src.operation_history.router import router as operation_history
 from src.alarms.router import router as alarms
 from fastapi.staticfiles import StaticFiles
 
-app = FastAPI(title="Manufactory API", version="0.2.0")
+app = FastAPI(title="Manufactory API", version="1.0.0")
 
 app.include_router(
     operation_history,
