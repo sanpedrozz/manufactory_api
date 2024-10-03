@@ -47,7 +47,6 @@ class Place(Base):
     message_thread_id = Column(String, default="General", nullable=False)
 
     operations = relationship("OperationHistory", back_populates="place", post_update=True)
-    camera_links = relationship("PlaceCameraLink", back_populates="place")
 
     @classmethod
     async def get_all(cls, db: AsyncSession) -> List["Place"]:
@@ -92,72 +91,12 @@ class Place(Base):
                 detail=str(ex)
             ) from ex
 
-    @classmethod
-    async def get_cameras_by_place_id(cls, db: AsyncSession, place_id: int) -> List[Dict]:
-        """
-        Get all camera_info by place_id.
-        :param db: The database session.
-        :param place_id: The place ID.
-        :return: A list of camera_info dictionaries.
-        """
-        try:
-            stmt = (
-                select(Camera)
-                .join(PlaceCameraLink, PlaceCameraLink.camera_id == Camera.id)
-                .join(cls, PlaceCameraLink.place_id == cls.id)
-                .filter(cls.id == place_id)
-            )
-            result = await db.execute(stmt)
-            return result.scalars().all()
-        except SQLAlchemyError as ex:
-            raise HTTPException(
-                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-                detail=str(ex)
-            ) from ex
-
-
-class Camera(Base):
-    __tablename__ = "cameras"
-    id = Column(BigInteger, primary_key=True, autoincrement=True)
-    camera_info = Column(JSON)
-    comment = Column(Text)
-
-    places = relationship("PlaceCameraLink", back_populates="camera")
-
-    @classmethod
-    async def get_all(cls, db: AsyncSession) -> List["Camera"]:
-        """
-        Get all Camera records.
-        :param db: The database session.
-        :return: A list of all Camera records.
-        """
-        try:
-            stmt = select(cls)
-            result = await db.execute(stmt)
-            return list(result.scalars().all())
-        except SQLAlchemyError as ex:
-            raise HTTPException(
-                status_code=status.HTTP_404_NOT_FOUND,
-                detail=str(ex)
-            ) from ex
-
-
-class PlaceCameraLink(Base):
-    __tablename__ = "place_camera_link"
-    id = Column(BigInteger, primary_key=True, autoincrement=True)
-    place_id = Column(BigInteger, ForeignKey('places.id'), nullable=False)
-    camera_id = Column(BigInteger, ForeignKey('cameras.id'), nullable=False)
-
-    place = relationship("Place", back_populates="camera_links")
-    camera = relationship("Camera", back_populates="places")
-
 
 class AlarmMessages(Base):
     __tablename__ = "alarm_messages"
     id = Column(BigInteger, primary_key=True)
     message = Column(Text, nullable=True)
     tag = Column(Text, nullable=True)
-    camera = Column(Boolean, default=False, nullable=False)
 
     @classmethod
     async def get_all(cls, db: AsyncSession) -> List["AlarmMessages"]:
