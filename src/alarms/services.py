@@ -8,7 +8,6 @@ from sqlalchemy.exc import SQLAlchemyError
 from datetime import datetime
 
 from src.db.models import Place, PlaceCameraLink, AlarmMessages
-from src.camera.services import get_video, dell_video
 from src.alarms.schemas import Alarm
 from src.bot.services import send_video, send_message
 
@@ -26,25 +25,7 @@ async def alarm_message(db: AsyncSession, alarm: Alarm):
                f'Авария: {alarm_data.message}\n'
                f'{alarm_data.tag}')
 
-    # Выгрузка видео
-    path_list = []
-    if alarm_data.camera:
-        cameras_list = await Place.get_cameras_by_place_id(db, alarm.place_id)
-        for camera in cameras_list:
-            path = await get_video(camera.camera_info, current_time)
-            if path is not None:
-                path_list.append(path)
-            else:
-                message = (f'{message}\n'
-                           f'#ВИДЕО_НЕ_ПОЛУЧИЛОСЬ_ВЫГРУЗИТЬ_КАМЕРА_{camera.comment}')
-
-    if path_list:
-        await send_video(path_list, message, place.message_thread_id)
-    else:
-        await send_message(message, place.message_thread_id)
-
-    for path in path_list:
-        dell_video(path)
+    await send_message(message, place.message_thread_id)
 
 
 async def get_camera_info_by_place_id(db: AsyncSession, id: int):
