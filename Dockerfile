@@ -29,7 +29,7 @@ COPY pyproject.toml poetry.lock ./
 RUN poetry install --no-interaction --no-ansi -vvv
 
 # Основной этап
-FROM python:3.13-slim-buster as base
+FROM python:3.12.7-alpine3.20 as base
 
 ENV TZ=Europe/Moscow
 ENV PIP_DISABLE_PIP_VERSION_CHECK=on
