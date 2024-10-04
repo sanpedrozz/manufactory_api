@@ -2,7 +2,7 @@ from datetime import datetime
 
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from src.api.operation_history.schemas import OperationHistory as OperationHistorySchema
+from src.api.operation.schemas import OperationHistory as OperationHistorySchema
 from src.db.models import OperationHistory as OperationHistoryDB
 
 

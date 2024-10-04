@@ -1,8 +1,8 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from src.api.operation_history.schemas import OperationHistory
-from src.api.operation_history.services import add_operation_history
+from src.api.operation.schemas import OperationHistory
+from src.api.operation.services import add_operation_history
 from src.database import get_db
 
 router = APIRouter()
