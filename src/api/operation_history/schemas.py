@@ -1,8 +1,5 @@
-# src/operation_history/schemas.py
-
 from pydantic import BaseModel
 from typing import Optional, Union
-from datetime import datetime
 
 
 class OperationHistory(BaseModel):
