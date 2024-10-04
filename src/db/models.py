@@ -45,6 +45,7 @@ class Place(Base):
     message_thread_id = Column(String, default="General", nullable=False)
 
     operations = relationship("OperationHistory", back_populates="place", post_update=True)
+    alarm_histories = relationship("AlarmHistory", back_populates="place", post_update=True)
 
     @classmethod
     async def get_all(cls, db: AsyncSession) -> List["Place"]:
@@ -96,6 +97,8 @@ class AlarmMessages(Base):
     message = Column(Text, nullable=True)
     tag = Column(Text, nullable=True)
 
+    alarm_histories = relationship("AlarmHistory", back_populates="alarm", post_update=True)  # Добавлено
+
     @classmethod
     async def get_all(cls, db: AsyncSession) -> List["AlarmMessages"]:
         """
@@ -140,47 +143,48 @@ class AlarmMessages(Base):
             ) from ex
 
 
-# class AlarmHistory(Base):
-#     __tablename__ = "alarm_history"
-#     id = Column(BigInteger, primary_key=True, autoincrement=True)
-#     place_id = Column(BigInteger, ForeignKey('places.id'), nullable=False)
-#     alarm_id = Column(BigInteger, ForeignKey('alarm_messages.id'), nullable=False)
-#     dt_occurred = Column(DateTime, default=datetime.now, nullable=False)
-#
-#     place = relationship("Place", back_populates="alarm_histories")
-#     alarm = relationship("AlarmMessages", back_populates="alarm_histories")
-#
-#     @classmethod
-#     async def get_all(cls, db: AsyncSession) -> List["AlarmHistory"]:
-#         """
-#         Get all AlarmHistory records.
-#         :param db: The database session.
-#         :return: A list of all AlarmHistory records.
-#         """
-#         try:
-#             stmt = select(cls)
-#             result = await db.execute(stmt)
-#             return list(result.scalars().all())
-#         except SQLAlchemyError as ex:
-#             raise HTTPException(
-#                 status_code=status.HTTP_404_NOT_FOUND,
-#                 detail=str(ex)
-#             ) from ex
-#
-#     @classmethod
-#     async def get_history_by_place_id(cls, db: AsyncSession, place_id: int) -> List["AlarmHistory"]:
-#         """
-#         Get AlarmHistory records by place_id.
-#         :param db: The database session.
-#         :param place_id: The place ID.
-#         :return: A list of AlarmHistory records for the given place.
-#         """
-#         try:
-#             stmt = select(cls).filter(cls.place_id == place_id)
-#             result = await db.execute(stmt)
-#             return list(result.scalars().all())
-#         except SQLAlchemyError as ex:
-#             raise HTTPException(
-#                 status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-#                 detail=str(ex)
-#             ) from ex
+class AlarmHistory(Base):
+    __tablename__ = "alarm_history"
+    id = Column(BigInteger, primary_key=True, autoincrement=True)
+    place_id = Column(BigInteger, ForeignKey('places.id'), nullable=False)
+    alarm_id = Column(BigInteger, ForeignKey('alarm_messages.id'), nullable=False)
+    comments = Column(Text, nullable=True)
+    dt_created = Column(DateTime, default=datetime.now, nullable=False)
+
+    place = relationship("Place", back_populates="alarm_histories")
+    alarm = relationship("AlarmMessages", back_populates="alarm_histories")
+
+    @classmethod
+    async def get_all(cls, db: AsyncSession) -> List["AlarmHistory"]:
+        """
+        Get all AlarmHistory records.
+        :param db: The database session.
+        :return: A list of all AlarmHistory records.
+        """
+        try:
+            stmt = select(cls)
+            result = await db.execute(stmt)
+            return list(result.scalars().all())
+        except SQLAlchemyError as ex:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail=str(ex)
+            ) from ex
+
+    @classmethod
+    async def get_history_by_place_id(cls, db: AsyncSession, place_id: int) -> List["AlarmHistory"]:
+        """
+        Get AlarmHistory records by place_id.
+        :param db: The database session.
+        :param place_id: The place ID.
+        :return: A list of AlarmHistory records for the given place.
+        """
+        try:
+            stmt = select(cls).filter(cls.place_id == place_id)
+            result = await db.execute(stmt)
+            return list(result.scalars().all())
+        except SQLAlchemyError as ex:
+            raise HTTPException(
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                detail=str(ex)
+            ) from ex
