@@ -1,7 +1,7 @@
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from src.db.models import Place, AlarmMessages, AlarmHistory
 from src.api.alarm.schemas import Alarm
+from src.db.models import Place, AlarmMessages, AlarmHistory
 from src.telegram_bot.services import send_message
 
 
@@ -28,4 +28,3 @@ async def add_alarm_history(db: AsyncSession, alarm: Alarm, dt):
         dt_created=dt
     )
     await new_alarm_history.add(db)
-    return new_alarm_history

@@ -1,4 +1,5 @@
 from fastapi import FastAPI
+
 from src.api.alarm.router import router as alarms
 from src.api.operation_history.router import router as operation_history
 

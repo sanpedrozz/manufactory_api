@@ -1,11 +1,12 @@
+from datetime import datetime
+from typing import List
+
+from fastapi import HTTPException, status
 from sqlalchemy import Column, ForeignKey, Text, Integer, BigInteger, DateTime, String
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy.orm import relationship
 from sqlalchemy.future import select
-from fastapi import HTTPException, status
-from typing import List
-from datetime import datetime
+from sqlalchemy.orm import relationship
 
 from src.db.base import Base
 

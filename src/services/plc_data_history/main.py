@@ -1,6 +1,7 @@
+import time
+
 from snap7 import client
 from snap7.util import get_string, get_int, get_real, get_bool, get_dint
-import time
 
 # Исходные данные
 plc_paste = '''

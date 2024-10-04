@@ -1,6 +1,7 @@
+from datetime import datetime
+
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
-from datetime import datetime
 
 from src.api.alarm.schemas import Alarm
 from src.api.alarm.services import alarm_message, add_alarm_history
@@ -19,4 +20,4 @@ async def send_alarm(alarm: Alarm, db: AsyncSession = Depends(get_db)):
         await add_alarm_history(db, alarm, dt)
         return alarm
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Ошибка при обработке аварии: {str(e)}")
+        raise HTTPException(status_code=500, detail=str(e))

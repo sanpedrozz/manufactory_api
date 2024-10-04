@@ -1,16 +1,9 @@
-# src/operation_history/services.py
-
 from datetime import datetime
+
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy.future import select
 
 from src.api.operation_history.schemas import OperationHistory as OperationHistorySchema
 from src.db.models import OperationHistory as OperationHistoryDB
-from typing import List
-from fastapi import HTTPException, status
-from sqlalchemy.exc import SQLAlchemyError
-from sqlalchemy import desc
-from sqlalchemy.sql.expression import func
 
 
 async def add_operation_history(db: AsyncSession, operation_history_data: OperationHistorySchema):
@@ -21,47 +14,3 @@ async def add_operation_history(db: AsyncSession, operation_history_data: Operat
         dt_created=datetime.now(),
     )
     await new_operation.add(db)
-    return new_operation
-
-
-async def get_all_operations(db: AsyncSession, limit: int = 100) -> List[OperationHistorySchema]:
-    try:
-        result = await db.execute(select(OperationHistoryDB).order_by(desc(OperationHistoryDB.dt_created)).limit(limit))
-        operations = result.scalars().all()
-        return [
-            OperationHistorySchema(
-                place=op.place_id,
-                program=op.program,
-                data=op.text,
-                created_at=op.dt_created,
-            ) for op in operations
-        ]
-    except SQLAlchemyError as ex:
-        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=f"Database error: {ex}")
-    except Exception as ex:
-        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=f"Unexpected error: {ex}")
-
-
-async def get_operation_part(db: AsyncSession, page: int = 1, limit: int = 25) -> List[OperationHistorySchema]:
-    try:
-        result = await db.execute(
-            select(OperationHistoryDB).order_by(desc(OperationHistoryDB.dt_created)).offset((page - 1) * limit).limit(
-                limit))
-        total_count = await db.execute(select(func.count()).select_from(OperationHistoryDB))
-        total_count = total_count.scalars().all()[0]
-        operations = result.scalars().all()
-        response = [
-            OperationHistorySchema(
-                place=op.place_id,
-                program=op.program,
-                data=op.text,
-                created_at=op.dt_created,
-            ) for op in operations
-        ]
-        return response, len(response), total_count
-    except SQLAlchemyError as ex:
-        logger.error(f"Database error: {ex}")
-        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=f"Database error: {ex}")
-    except Exception as ex:
-        logger.error(f"Unexpected error: {ex}")
-        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=f"Unexpected error: {ex}")
