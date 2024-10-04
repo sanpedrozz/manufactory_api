@@ -32,4 +32,4 @@ COPY . /scr/
 EXPOSE 7000
 
 # Запуск uvicorn напрямую без poetry run
-CMD ["uvicorn", "run:app", "--host", "0.0.0.0", "--port", "7000"]
+CMD ["uvicorn", "src.api.server:app", "--host", "0.0.0.0", "--port", "7000"]

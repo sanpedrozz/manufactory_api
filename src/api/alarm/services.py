@@ -1,7 +1,7 @@
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.db.models import Place, AlarmMessages, AlarmHistory
-from src.api.alarm_service.schemas import Alarm
+from src.api.alarm.schemas import Alarm
 from src.telegram_bot.services import send_message
 
 

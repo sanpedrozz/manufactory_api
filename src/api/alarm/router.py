@@ -2,8 +2,8 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
 from datetime import datetime
 
-from src.api.alarm_service.schemas import Alarm
-from src.api.alarm_service.services import alarm_message, add_alarm_history
+from src.api.alarm.schemas import Alarm
+from src.api.alarm.services import alarm_message, add_alarm_history
 from src.database import get_db
 
 router = APIRouter()

@@ -1,8 +1,8 @@
 version: '3.8'
 
 services:
-  manufactory_api:
-    container_name: manufactory_api
+  api:
+    container_name: api
     restart: always
     build: .
     ports:
