@@ -1,8 +1,6 @@
-# src/main.py
-
 from fastapi import FastAPI
-from src.operation_history.router import router as operation_history
-from src.alarm_service.router import router as alarms
+from src.api.alarm_service.router import router as alarms
+from src.api.operation_history.router import router as operation_history
 from fastapi.staticfiles import StaticFiles
 
 app = FastAPI(title="Manufactory API", version="1.0.0")
@@ -19,5 +17,4 @@ app.include_router(
     tags=["operation_history"]
 )
 
-
-app.mount("/static", StaticFiles(directory="src/operation_history/static"), name="static")
+app.mount("/static", StaticFiles(directory="src/api/operation_history/static"), name="static")

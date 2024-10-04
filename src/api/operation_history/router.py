@@ -1,10 +1,8 @@
-# src/operation_history/router.py
-
 from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy.ext.asyncio import AsyncSession
-from src.operation_history.schemas import OperationHistory, OperationList
-from src.operation_history.services import (add_operation_history,
-                                            get_all_operations, get_operation_part,)
+from src.api.operation_history.schemas import OperationHistory, OperationList
+from src.api.operation_history.services import (add_operation_history,
+                                                get_all_operations, get_operation_part, )
 from src.database import get_db
 
 from fastapi.responses import HTMLResponse
@@ -58,4 +56,3 @@ async def get_operation_list(
 async def get_index():
     with open("src/operation_history/static/index.html") as f:
         return HTMLResponse(content=f.read(), status_code=200)
-
