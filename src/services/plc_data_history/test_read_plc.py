@@ -1,3 +1,5 @@
+from multiprocessing.connection import address_type
+
 from src.services.plc_data_history.models import models, PLC
 from src.services.plc_data_history.plc_client import PLCClient
 
@@ -11,7 +13,14 @@ MINUTE	USInt	6.0
 SECOND	USInt	7.0
 
 '''
-
+{"YEAR": {"type": "UInt", "address": "0.0"},
+ "MONTH": {"type": "USInt", "address": "1.0"},
+ "DAY": {"type": "USInt", "address": "2.0"},
+ "WEEKDAY": {"type": "USInt", "address": "3.0"},
+ "DAY": {"type": "USInt", "address": "4.0"},
+ "HOUR": {"type": "USInt", "address": "5.0"},
+ "MINUTE": {"type": "USInt", "address": "6.0"},
+ "SECOND": {"type": "USInt", "address": "7.0"}}
 def parse_address(address):
     try:
         byte, bit = address.split(".")

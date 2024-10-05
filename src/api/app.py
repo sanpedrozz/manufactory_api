@@ -1,7 +1,8 @@
 from fastapi import FastAPI
 
 from src.api.alarm.router import router as alarms
-from src.api.operation.router import router as operation_history
+from src.api.operation.router import router as operation
+from src.api.place.router import router as place
 
 app = FastAPI(title="Manufactory API", version="1.0.0")
 
@@ -12,7 +13,13 @@ app.include_router(
 )
 
 app.include_router(
-    operation_history,
+    operation,
     prefix="/operation",
-    tags=["operation"]
+    tags=["Операции"]
+)
+
+app.include_router(
+    place,
+    prefix="/place",
+    tags=["Устройства"]
 )

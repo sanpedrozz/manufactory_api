@@ -2,7 +2,7 @@ from datetime import datetime
 from typing import List
 
 from fastapi import HTTPException, status
-from sqlalchemy import Column, ForeignKey, Text, Integer, BigInteger, DateTime, String
+from sqlalchemy import Column, ForeignKey, Text, Integer, BigInteger, DateTime, String, JSON
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
@@ -45,6 +45,7 @@ class Place(Base):
     name = Column(Text)
     message_thread_id = Column(String, default="General", nullable=False)
     ip = Column(String(45), nullable=True)
+    data_for_read = Column(JSON, nullable=True)
 
     operations = relationship("OperationHistory", back_populates="place", post_update=True)
     alarm_histories = relationship("AlarmHistory", back_populates="place", post_update=True)
