@@ -68,6 +68,7 @@ plc_client = PLCClient(PLC(ip = '192.168.23.31', name='KDT1'))
 db_data = plc_client.read_data(49, 24, 14)
 values = get_var_values(db_data, plc_data)
 print(values)
+
 #
 # db_data = client.db_read(49, 24, 14)  # Чтение данных DB 11
 # values = get_var_values(db_data, plc_paste)
