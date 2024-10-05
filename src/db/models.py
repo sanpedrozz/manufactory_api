@@ -93,6 +93,22 @@ class Place(Base):
                 detail=str(ex)
             ) from ex
 
+    async def update_data_for_read(self, db: AsyncSession, new_data):
+        """
+        Update column data_for_read for current Place.
+        :param db: The database session.
+        :param new_data: Новые данные для записи в колонку data_for_read.
+        """
+        try:
+            # Вызов метода update из базового класса для обновления конкретного поля
+            await self.update(db, data_for_read=new_data)
+        except SQLAlchemyError as ex:
+            await db.rollback()
+            raise HTTPException(
+                status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+                detail=f"Ошибка при обновлении data_for_read: {str(ex)}"
+            ) from ex
+
 
 class AlarmMessages(Base):
     __tablename__ = "alarm_messages"

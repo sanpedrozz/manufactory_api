@@ -1,13 +1,7 @@
-from sqlalchemy.ext.asyncio import AsyncSession
+# from sqlalchemy.ext.asyncio import AsyncSession
+#
+# async def update_data_for_read(db: AsyncSession):
 
-from src.db.models import Place
-
-
-async def get_all_places(db: AsyncSession):
-    """
-    Получить список всех устройств (Place)
-    """
-    return await Place.get_all(db)
 
 
 # async def add_(db: AsyncSession, alarm: Alarm, dt):

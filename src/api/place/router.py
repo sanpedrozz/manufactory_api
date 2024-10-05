@@ -1,49 +1,26 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from src.api.place.services import get_all_places
+from src.api.place.schemas import DataBlock
 from src.database import get_db
 from src.db.models import Place
+
 router = APIRouter()
 
 
 @router.get("/places")
 async def get_places(db: AsyncSession = Depends(get_db)):
-    """
-    Возвращает список устройств (Place) для выпадающего меню.
-    """
-    return await get_all_places(db)
+    return await Place.get_all(db)
 
 
-# @router.post("/save_data")
-# async def save_data(data: dict, db: AsyncSession = Depends(get_db)):
-#     """
-#     Сохраняет данные в таблице OperationHistory.
-#     :param data: JSON-объект, содержащий DataBlock и Data.
-#     """
-#     # Запись данных в БД
-#     operation = OperationHistory(
-#         place_id=data['place_id'],
-#         text=str(data['data_blocks']),  # Преобразуем JSON в строку для хранения
-#         program="PLC data"  # Можно добавить описание или название программы
-#     )
-#     db.add(operation)
-#     await db.commit()
-#     return {"status": "success"}
+@router.post("/places/{place_id}/update_data_for_read")
+async def update_data_for_read(place_id: int, data_for_read: list[DataBlock], db: AsyncSession = Depends(get_db)):
+    place = await Place.get_place_by_id(db, place_id)
+    data_for_read_json = [block.dict() for block in data_for_read]
 
-
-@router.post("/save_place_data")
-async def save_place_data(place_id: int, data: dict, db: AsyncSession = Depends(get_db)):
-    """
-    Сохраняет DataBlock и Data в колонке data_config таблицы Place.
-    :param place_id: Идентификатор устройства (Place).
-    :param data: JSON-объект, содержащий DataBlock и Data.
-    """
-    place = await db.get(Place, place_id)
     if not place:
-        raise HTTPException(status_code=404, detail="Place not found")
+        raise HTTPException(status_code=404, detail=f"Place with id {place_id} not found")
 
-    # Сохраняем данные в колонке data_config
-    place.data_config = data
-    await db.commit()
-    return {"status": "success"}
+
+    await place.update_data_for_read(db, data_for_read_json)
+    return {"message": "Data updated successfully"}

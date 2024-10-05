@@ -1,9 +1,11 @@
-from typing import Optional
-
 from pydantic import BaseModel
 
 
-class Alarm(BaseModel):
-    place_id: int
-    alarm: int
-    comment: Optional[str] = None
+class DataItem(BaseModel):
+    type: str
+    address: str
+
+
+class DataBlock(BaseModel):
+    data_block: int
+    data: dict[str, DataItem]
