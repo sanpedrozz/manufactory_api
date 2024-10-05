@@ -1,100 +1,91 @@
-import traceback
 from functools import wraps
 from time import sleep
 
 from snap7 import client
-from snap7.exceptions import Snap7Exception
 
-from logs.logger import logger
+from src.services.plc_data_history.models import PLC
 
 
-def singleton(cls):
+def reconnect_on_fail(reconnect_delay=5):
     """
-    Декоратор, превращающий класс в синглтон. Обеспечивает, что только один экземпляр класса будет создан.
-    :param cls: Класс, который нужно превратить в сингл тон
-    :return: Превращенный в синглтон класс
-    """
-    instances = {}
-
-    @wraps(cls)
-    def wrapper(*args, **kwargs):
-        if cls not in instances:
-            instances[cls] = cls(*args, **kwargs)
-        return instances[cls]
-    return wrapper
-
-
-def reconnect_on_fail(max_retries=3600, delay=5):
-    """
-    Декоратор, обеспечивающий повторное подключение к контроллеру PLC при сбоях соединения.
-    :param max_retries: Максимальное количество попыток подключения
-    :param delay: Задержка (в секундах) между попытками переподключения
-    :return: Декорированная функция
+    Декоратор для автоматического переподключения к PLC при сбоях подключения.
+    :param reconnect_delay: Задержка (в секундах) между попытками переподключения.
+    :return: Декорированная функция.
     """
     def decorator(function):
         @wraps(function)
         def wrapper(self, *args, **kwargs):
-            retries = 0
-            while retries < max_retries:
+            while True:
                 try:
                     if self.connected:
                         return function(self, *args, **kwargs)
                     self.connect()
-                except Exception as error:
-                    logger.warning(f'PLC error for {self.ip}: {error}:\n\n {traceback.format_exc()}\n')
+                except OSError as error:
                     self.disconnect()
-                    sleep(delay)
-                    retries += 1
-            raise Snap7Exception(f'Не удалось выполнить функцию после {max_retries} повторных попыток')
+                    sleep(reconnect_delay)
         return wrapper
     return decorator
 
 
-@singleton
 class PLCClient:
-    def __init__(self, ip: str):
-        self.ip = ip
+    def __init__(self, plc: PLC):
+        """
+        Инициализация клиента для подключения к PLC.
+        :param plc: PLC
+        """
+        self.ip = plc.ip
         self.client = client.Client()
         self.connect()
 
     @property
     def connected(self):
         """
-        Проверяет, установлено ли соединение с контроллером PLC
+        Проверка, установлено ли подключение с контроллером PLC.
         :return: True, если соединение установлено, иначе False
         """
         return self.client.get_connected()
 
     def connect(self):
         """
-        Устанавливает соединение с контроллером PLC.
+        Установить подключение с контроллером PLC.
         """
-        return self.client.connect(self.ip, 0, 1)
+        try:
+            self.client.connect(self.ip, 0, 1)
+        except Exception as e:
+            raise RuntimeError(f"Ошибка подключения к PLC по адресу {self.ip}") from e
 
     def disconnect(self):
         """
-        Разрывает соединение с контроллером PLC.
+        Разорвать подключение с контроллером PLC.
         """
-        return self.client.disconnect()
+        try:
+            self.client.disconnect()
+        except Exception as e:
+            raise RuntimeError(f"Ошибка отключения от PLC {self.ip}") from e
 
     @reconnect_on_fail()
-    def read_data(self, db_number: int, offset: int, size: int):
+    def read_data(self, db: int, offset: int, size: int):
         """
-        Читает данные из указанной области данных (DB) контроллера PLC
-        :param db_number: Int - Номер области данных (DB).
-        :param offset: Int - Смещение начального байта в области данных.
-        :param size: Int - Размер читаемых данных (в байтах).
+        Чтение данных из указанной области памяти (DB) контроллера PLC.
+        :param db: Номер области памяти (DB).
+        :param offset: Смещение начального байта в области памяти.
+        :param size: Размер читаемых данных (в байтах).
         :return: Прочитанные данные
         """
-        return self.client.db_read(db_number, offset, size)
+        try:
+            return self.client.db_read(db, offset, size)
+        except Exception as e:
+            raise RuntimeError(f"Ошибка чтения данных с PLC {self.ip}") from e
 
     @reconnect_on_fail()
-    def write_data(self, db_number: int, start: int, data: bytearray):
+    def write_data(self, db: int, start: int, data: bytearray):
         """
-        Записывает данные в указанную область данных (DB) контроллера PLC
-        :param db_number: Int - Номер области данных (DB).
-        :param start: Int - Смещение начального байта в области данных.
-        :param data: Int - Размер читаемых данных (в байтах).
-        :return: Результат операции записи (количество записанных байт).
+        Запись данных в указанную область памяти (DB) контроллера PLC.
+        :param db: Номер области памяти (DB).
+        :param start: Смещение начального байта в области памяти.
+        :param data: Данные для записи в байтах.
         """
-        return self.client.db_write(db_number, start, data)
+        try:
+            self.client.db_write(db, start, data)
+        except Exception as e:
+            raise RuntimeError(f"Ошибка записи данных в PLC {self.ip}") from e

@@ -1,4 +1,5 @@
 from snap7.util import get_string, get_int, get_real, get_bool, get_dint, get_uint, get_usint
+from pydantic import BaseModel
 
 
 class DataType:
@@ -53,3 +54,7 @@ models = {
     'USInt': USIntDataType(),
     'DInt': DIntDataType(),
 }
+
+class PLC(BaseModel):
+    name: str
+    ip: str
