@@ -1,0 +1,66 @@
+/* Общий контейнер */
+.container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Заголовок */
+.title {
+  text-align: center;
+  font-size: 2em;
+  margin-bottom: 20px;
+}
+
+/* Форматирование формы */
+.form-group {
+  margin-bottom: 15px;
+}
+
+.form-select {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  margin-top: 8px;
+  font-size: 1rem;
+}
+
+/* Форматирование для блоков данных */
+.data-block {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 15px;
+}
+
+.input-block,
+.textarea-block {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  margin-bottom: 10px;
+  font-size: 1rem;
+}
+
+/* Кнопки */
+.buttons {
+  display: flex;
+  justify-content: space-between;
+}
+
+.btn, .btn-submit {
+  background-color: #007bff;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.btn:hover, .btn-submit:hover {
+  background-color: #0056b3;
+}

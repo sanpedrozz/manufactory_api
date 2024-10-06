@@ -1,5 +1,7 @@
-import React, {useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { parseData } from '../utils/dataParser';  // Импортируем парсер
+import './AddDataPage.css'; // Подключаем стили
 
 const AddDataPage = () => {
     const [places, setPlaces] = useState([]);
@@ -30,13 +32,7 @@ const AddDataPage = () => {
 
         const payload = dataBlocks.map((item) => ({
             data_block: Number(item.block), // Преобразуем в число
-            data: item.data.split('\n').reduce((acc, line) => {
-                const [name, type, address] = line.split('\t');
-                if (name && type && address) { // Убедись, что все данные заполнены
-                    acc[name] = {type, address};
-                }
-                return acc;
-            }, {})
+            data: parseData(item.data)      // Используем парсер для преобразования данных
         }));
         console.log("Данные для отправки:", payload);
 
@@ -50,23 +46,26 @@ const AddDataPage = () => {
     };
 
     return (
-        <div>
-            <h1>Add Data to Place</h1>
+        <div className="container">
+            <h1 className="title">Add Data to Place</h1>
             <form onSubmit={handleSubmit}>
-                <label htmlFor="place">Select Place:</label>
-                <select
-                    id="place"
-                    value={selectedPlace}
-                    onChange={(e) => setSelectedPlace(e.target.value)}
-                >
-                    <option value="">-- Select Place --</option>
-                    {places.map((place) => (
-                        <option key={place.id} value={place.id}>{place.name}</option>
-                    ))}
-                </select>
+                <div className="form-group">
+                    <label htmlFor="place">Select Place:</label>
+                    <select
+                        id="place"
+                        value={selectedPlace}
+                        onChange={(e) => setSelectedPlace(e.target.value)}
+                        className="form-select"
+                    >
+                        <option value="">-- Select Place --</option>
+                        {places.map((place) => (
+                            <option key={place.id} value={place.id}>{place.name}</option>
+                        ))}
+                    </select>
+                </div>
 
                 {dataBlocks.map((block, index) => (
-                    <div key={index}>
+                    <div key={index} className="data-block">
                         <input
                             type="text"
                             placeholder="Data Block"
@@ -76,6 +75,7 @@ const AddDataPage = () => {
                                 newDataBlocks[index].block = e.target.value;
                                 setDataBlocks(newDataBlocks);
                             }}
+                            className="input-block"
                         />
                         <textarea
                             placeholder="Data"
@@ -85,12 +85,15 @@ const AddDataPage = () => {
                                 newDataBlocks[index].data = e.target.value;
                                 setDataBlocks(newDataBlocks);
                             }}
+                            className="textarea-block"
                         />
                     </div>
                 ))}
 
-                <button type="button" onClick={addDataBlock}>Add Data Block</button>
-                <button type="submit">Submit</button>
+                <div className="buttons">
+                    <button type="button" className="btn" onClick={addDataBlock}>Add Data Block</button>
+                    <button type="submit" className="btn-submit">Submit</button>
+                </div>
             </form>
         </div>
     );

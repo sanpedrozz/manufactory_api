@@ -23,7 +23,7 @@ app.include_router(
 
 app.include_router(
     operation,
-    prefix="/operation",
+    prefix="/operation_history",
     tags=["Операции"]
 )
 

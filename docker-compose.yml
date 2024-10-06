@@ -7,8 +7,6 @@ services:
     build: .
     ports:
       - "7000:7000"
-    volumes:
-      - ./logs:/scr/logs
     networks:
       - default
 
