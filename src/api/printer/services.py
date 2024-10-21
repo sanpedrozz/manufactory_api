@@ -27,10 +27,10 @@ async def print_label_service():
         site='www.expo-torg.ru',
         comment_lines=['', ''],
         comment='',
-        l1={'val': '', 'parent': False, 'thickness': 2},
-        l2={'val': '', 'parent': False, 'thickness': 2},
-        w3={'val': '', 'parent': False, 'thickness': 2},
-        w4={'val': '', 'parent': False, 'thickness': 2},
+        l1={'val': 0.0, 'parent': False, 'thickness': 2},
+        l2={'val': 0.0, 'parent': False, 'thickness': 2},
+        w3={'val': 0.0, 'parent': False, 'thickness': 2},
+        w4={'val': 0.0, 'parent': False, 'thickness': 2},
         l1_other_color='',
         l2_other_color='',
         w3_other_color='',
@@ -356,3 +356,9 @@ def prepare_message(data: dict, is_reprint=True, x_offset=2, y_offset=0) -> str:
         )
 
     return label.dumpZPL().replace("^FD_7E", "^FH_^FD_7E")
+
+
+if __name__ == "__main__":
+    import asyncio
+
+    asyncio.run(print_label_service())
