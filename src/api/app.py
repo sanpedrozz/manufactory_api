@@ -4,6 +4,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from src.api.alarm.router import router as alarms
 from src.api.operation.router import router as operation
 from src.api.place.router import router as place
+from src.api.printer.router import router as printer
 
 app = FastAPI(title="Manufactory API", version="1.0.0")
 
@@ -31,4 +32,10 @@ app.include_router(
     place,
     prefix="/place",
     tags=["Устройства"]
+)
+
+app.include_router(
+    printer,
+    prefix="/printer",
+    tags=["Принтер"]
 )
