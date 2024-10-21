@@ -16,6 +16,7 @@ asyncpg = "^0.30.0"
 uvicorn = "^0.32.0"
 python-snap7 = "^2.0.0"
 zpl = "^0.1.11"
+greenlet = "^3.1.1"
 
 
 [build-system]
