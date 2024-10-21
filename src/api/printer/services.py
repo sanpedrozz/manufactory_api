@@ -46,7 +46,7 @@ async def print_label_service():
 
     # Отправка на принтер
     mysocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    mysocket.connect(('192.168.202.177', 9100))  # IP и порт принтера
+    mysocket.connect(('192.168.23.134', 9100))  # IP и порт принтера
     mysocket.send(prepared_message.encode("utf-8"))
     mysocket.close()
 
