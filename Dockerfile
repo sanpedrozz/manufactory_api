@@ -1,5 +1,5 @@
 # Этап сборки зависимостей
-FROM python:3.12.7-slim-bookworm AS builder
+FROM python:3.13.0-slim-bookworm AS builder
 
 ENV TZ=Europe/Moscow \
     POETRY_VERSION=1.8.2 \

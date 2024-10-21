@@ -1,20 +1,21 @@
 [tool.poetry]
 name = "manufactory-api"
-version = "1.0.0"
+version = "0.1.0"
 description = ""
 authors = ["petrl <sup686@gmail.com>"]
 readme = "README.md"
 
 [tool.poetry.dependencies]
-python = "^3.12"
-sqlalchemy = "^2.0.35"
-fastapi = "^0.115.0"
+python = "^3.13"
+sqlalchemy = "^2.0.36"
+fastapi = "^0.115.2"
 alembic = "^1.13.3"
 aiogram = "^3.13.1"
-pydantic-settings = "^2.5.2"
-asyncpg = "^0.29.0"
-uvicorn = "^0.31.0"
+pydantic-settings = "^2.6.0"
+asyncpg = "^0.30.0"
+uvicorn = "^0.32.0"
 python-snap7 = "^2.0.0"
+zpl = "^0.1.11"
 
 
 [build-system]
