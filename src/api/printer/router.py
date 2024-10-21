@@ -23,10 +23,12 @@ async def get_printer_params():
     return data
 
 
-@router.get("/print", name="print_label")
+@router.post("/print", name="print_label")
 async def print_label():
     try:
         await print_label_service()
         return {"status": "Printed successfully"}
+    except ConnectionError as e:
+        raise HTTPException(status_code=503, detail="Printer connection error")
     except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+        raise HTTPException(status_code=500, detail="Internal server error")
