@@ -22,7 +22,7 @@ async def print_label_service(label_id: int):
         cover='101 PE',
         size='807.0x727.0x3.0',
         count='7(9)',
-        order='25453',
+        order=str(label_id)[1:6],
         client_pos='',
         site='www.expo-torg.ru',
         comment_lines=['', ''],
