@@ -3,7 +3,7 @@ import random
 from fastapi import APIRouter, HTTPException
 
 from src.api.printer.services import print_label_service
-
+from src.api.printer.schemas import LabelRequest
 router = APIRouter()
 
 
@@ -24,9 +24,9 @@ async def get_printer_params():
 
 
 @router.post("/print", name="print_label")
-async def print_label():
+async def print_label(label_request: LabelRequest):
     try:
-        await print_label_service()
+        await print_label_service(label_request.label_id)
         return {"status": "Printed successfully"}
     except ConnectionError as e:
         raise HTTPException(status_code=503, detail="Printer connection error")

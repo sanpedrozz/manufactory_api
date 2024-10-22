@@ -12,10 +12,10 @@ class ItemsTextureEnum(Enum):
     WITHOUT_TEXTURE = "WITHOUT_TEXTURE"
 
 
-async def print_label_service():
+async def print_label_service(label_id: int):
     # Пример данных для этикетки (или они могут поступать из другого источника)
     data = PrintData(
-        label_id=425453007000009,
+        label_id=label_id,
         length=807.0,
         width=727.0,
         thickness=3.0,
@@ -361,4 +361,4 @@ def prepare_message(data: dict, is_reprint=True, x_offset=2, y_offset=0) -> str:
 if __name__ == "__main__":
     import asyncio
 
-    asyncio.run(print_label_service())
+    asyncio.run(print_label_service(425453007000009))

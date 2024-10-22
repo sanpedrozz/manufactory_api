@@ -1,4 +1,5 @@
 from typing import Optional, Dict
+
 from pydantic import BaseModel
 
 
@@ -27,3 +28,7 @@ class PrintData(BaseModel):
     edge_dop: str
     texture: str
     operations_info: str
+
+
+class LabelRequest(BaseModel):
+    label_id: int
