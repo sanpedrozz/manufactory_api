@@ -11,8 +11,8 @@ router = APIRouter()
 async def get_printer_params():
     data = {
         "id": random.randint(100000000000000, 999999999999999),
-        "x": random.randint(1, 2000),
-        "y": random.randint(1, 2000),
+        "x": random.randint(100, 2700),
+        "y": random.randint(100, 1900),
         "a": random.choice([False, True]),
     }
 
