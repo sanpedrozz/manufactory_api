@@ -7,11 +7,15 @@ from src.api.printer.services import print_label_service
 
 router = APIRouter()
 
-# Инициализируем начальные значения
-x_value = 100
-y_value = 100
-x_max = 2700
-y_max = 1900
+# Начальные значения
+initial_id = 100001000000000
+current_id = initial_id
+x_value = 150
+y_value = 150
+x_min, x_max = 150, 2650
+y_min, y_max = 150, 1950
+a_value = False
+toggle_counter = 0  # Счётчик для переключения
 
 
 @router.get("/get_data", name="get_print_params")
@@ -32,28 +36,52 @@ async def get_printer_params():
 
 @router.get("/get_data_test", name="get_data_test")
 async def get_data_test():
-    global x_value, y_value
+    global current_id, x_value, y_value, a_value, toggle_counter
 
+    # Формируем данные
     data = {
-        "id": random.randint(100000000000000, 999999999999999),
+        "id": current_id,
         "x": x_value,
         "y": y_value,
-        "a": random.choice([False, True]),
+        "a": a_value,
     }
 
-    # Обновляем координаты для следующего вызова
+    # Обновляем id
+    current_id += 1000000000
+
+    # Обновляем координаты
     x_value += 100
     if x_value > x_max:
-        x_value = 100
+        x_value = x_min
         y_value += 100
         if y_value > y_max:
-            y_value = 100  # Сбрасываем y после достижения максимума
+            # Сброс значений после достижения максимальных
+            x_value = x_min
+            y_value = y_min
+            current_id = initial_id
+            return {"result": "done"}
 
-    # 10% шанс вернуть {"result": "done"}
-    if random.random() < 0.1:
-        return {"result": "done"}
+    # Меняем значение каждые 5 запросов
+    toggle_counter += 1
+    if toggle_counter >= 5:
+        a_value = not a_value
+        toggle_counter = 0
 
     return data
+
+
+@router.get("/reset", name="reset_coordinates")
+async def reset_coordinates():
+    global current_id, x_value, y_value, a_value, toggle_counter
+
+    # Сброс всех значений
+    current_id = initial_id
+    x_value = x_min
+    y_value = y_min
+    a_value = False
+    toggle_counter = 0
+
+    return {"status": "reset done"}
 
 
 @router.post("/print", name="print_label")
