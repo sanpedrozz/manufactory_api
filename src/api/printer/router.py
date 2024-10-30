@@ -13,7 +13,7 @@ current_id = initial_id
 x_value = 150
 y_value = 150
 x_min, x_max = 150, 2650
-y_min, y_max = 150, 1950
+y_min, y_max = 150, 350
 a_value = False
 toggle_counter = 0  # Счётчик для переключения
 
