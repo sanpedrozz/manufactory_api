@@ -1,5 +1,5 @@
 # Используем Node.js для сборки фронтенда
-FROM node:22-alpine as build
+FROM node:22-alpine AS build
 WORKDIR /app
 COPY package.json ./
 COPY package-lock.json ./
