@@ -35,6 +35,10 @@ async def get_printer_params():
 async def get_data_test():
     global coords, coords_counter
 
+    if coords_counter >= 4:
+        coords_counter = 0
+        return {"result": "done"}
+
     # Формируем данные
     data = {
         "id": random.randint(100000000000000, 999999999999999),
@@ -44,12 +48,6 @@ async def get_data_test():
         "coords_counter": coords_counter
     }
     coords_counter += 1
-
-    # Обновляем координаты
-    if coords_counter > 4:
-        coords_counter = 0
-        return {"result": "done"}
-
     return data
 
 
