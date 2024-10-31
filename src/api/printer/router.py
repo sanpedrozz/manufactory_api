@@ -41,11 +41,12 @@ async def get_data_test():
         "x": coords[coords_counter]["x"],
         "y": coords[coords_counter]["y"],
         "a": coords[coords_counter]["a"],
+        "coords_counter": coords_counter
     }
 
     # Обновляем координаты
     coords_counter += 1
-    if coords_counter >= 3:
+    if coords_counter > 3:
         coords_counter = 0
         return {"result": "done"}
 
