@@ -44,8 +44,7 @@ async def get_data_test():
         "id": random.randint(100000000000000, 999999999999999),
         "x": coords[coords_counter]["x"],
         "y": coords[coords_counter]["y"],
-        "a": coords[coords_counter]["a"],
-        "coords_counter": coords_counter
+        "a": coords[coords_counter]["a"]
     }
     coords_counter += 1
     return data
