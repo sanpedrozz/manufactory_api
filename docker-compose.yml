@@ -20,6 +20,27 @@ services:
     networks:
       - default
 
+#  mosquitto:
+#    image: eclipse-mosquitto
+#    container_name: mosquitto_broker
+#    ports:
+#      - "1883:1883"    # Стандартный порт для MQTT
+#      - "9001:9001"    # Вебсокет порт (необязательно, если нужен WebSocket)
+#    volumes:
+#      - ./mosquitto/config:/mosquitto/config    # Папка для конфигурационных файлов
+#      - ./mosquitto/data:/mosquitto/data        # Папка для данных
+#      - ./mosquitto/log:/mosquitto/log          # Папка для логов
+#
+#  mqtt_stat_service:
+#    container_name: manufactory_mqtt_stat_service
+#    restart: always
+#    build:
+#      context: .  # Используйте корневую директорию, если pyproject.toml в корне
+#      dockerfile: ./src/services/Dockerfile  # Укажите правильный путь к Dockerfile
+#    depends_on:
+#      - mosquitto
+
+
 networks:
   default:
     name: docker_network

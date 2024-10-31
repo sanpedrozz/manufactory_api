@@ -19,6 +19,11 @@ zpl = "^0.1.11"
 greenlet = "^3.1.1"
 
 
+[tool.poetry.group.mqtt_stat_service.dependencies]
+aiohttp = "^3.10.10"
+gmqtt = "^0.6.16"
+pydantic = "^2.9.2"
+
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"

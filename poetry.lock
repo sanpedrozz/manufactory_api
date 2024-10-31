@@ -452,6 +452,20 @@ files = [
 ]
 
 [[package]]
+name = "gmqtt"
+version = "0.6.16"
+description = "Client for MQTT protocol"
+optional = false
+python-versions = ">=3.5"
+files = [
+    {file = "gmqtt-0.6.16-py3-none-any.whl", hash = "sha256:577f9170a88c98c0b16e9ca5cc895d5a3ee82615ace628757454500e565bd12f"},
+    {file = "gmqtt-0.6.16.tar.gz", hash = "sha256:ddd1fdc1c6ae604e74377cf70e99f067e579c03c1c71a6acd494e199e93b7fa4"},
+]
+
+[package.extras]
+test = ["atomicwrites (>=1.3.0)", "attrs (>=19.1.0)", "codecov (>=2.0.15)", "coverage (>=4.5.3)", "more-itertools (>=7.0.0)", "pluggy (>=0.11.0)", "py (>=1.8.0)", "pytest (>=5.4.0)", "pytest-asyncio (>=0.12.0)", "pytest-cov (>=2.7.1)", "six (>=1.12.0)", "uvloop (>=0.14.0)"]
+
+[[package]]
 name = "greenlet"
 version = "3.1.1"
 description = "Lightweight in-process concurrent programming"
@@ -1402,4 +1416,4 @@ Pillow = "*"
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.13"
-content-hash = "916d7ee5f3bd93ae52d3a5bcf6b237dbf6e208f089fcfe2f27714719c644a175"
+content-hash = "f6397bba29b589755435c5d076cb5374874a812f2cf323b498a2fe482ef86a4d"
