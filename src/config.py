@@ -17,11 +17,11 @@ class Settings(BaseSettings):
     BOT_TOKEN: str
     CHAT_ID: str
 
-    API: str
-    MQTT_HOST: str = Field(..., env="MQTT_HOST")
-    MQTT_PORT: int = Field(1883, env="MQTT_PORT")
-    MQTT_USERNAME: str = Field("", env="MQTT_USERNAME")
-    MQTT_PASSWORD: str = Field("", env="MQTT_PASSWORD")
+    # API: str
+    # MQTT_HOST: str = Field(..., env="MQTT_HOST")
+    # MQTT_PORT: int = Field(1883, env="MQTT_PORT")
+    # MQTT_USERNAME: str = Field("", env="MQTT_USERNAME")
+    # MQTT_PASSWORD: str = Field("", env="MQTT_PASSWORD")
 
     @computed_field
     @property
@@ -48,16 +48,16 @@ class Settings(BaseSettings):
         )
         return str(url)
 
-    @computed_field
-    @property
-    def mqtt_url(self) -> str:
-        """
-        Создает URL для подключения к MQTT.
-        """
-        auth_part = (
-            f"{self.MQTT_USERNAME}:{self.MQTT_PASSWORD}@" if self.MQTT_USERNAME else ""
-        )
-        return f"mqtt://{auth_part}{self.MQTT_HOST}:{self.MQTT_PORT}"
+    # @computed_field
+    # @property
+    # def mqtt_url(self) -> str:
+    #     """
+    #     Создает URL для подключения к MQTT.
+    #     """
+    #     auth_part = (
+    #         f"{self.MQTT_USERNAME}:{self.MQTT_PASSWORD}@" if self.MQTT_USERNAME else ""
+    #     )
+    #     return f"mqtt://{auth_part}{self.MQTT_HOST}:{self.MQTT_PORT}"
 
 
 settings = Settings()
