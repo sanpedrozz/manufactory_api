@@ -1,6 +1,18 @@
 version: '3.8'
 
 services:
+#  api-gateway:
+#    build: ./api-gateway
+#    ports:
+#      - "7000:80"
+#    depends_on:
+#      - plc_data_service
+#      - plc_alarm_service
+#      - print_service
+#      - telegram_bot_service
+#    networks:
+#      - app-network
+
   api:
     container_name: manufactory_api
     restart: always
@@ -10,38 +22,16 @@ services:
     networks:
       - default
 
-#  frontend:
-#    container_name: manufactory_frontend
-#    build:
-#      context: ./src/frontend
-#      dockerfile: ./Dockerfile
-#    ports:
-#      - "3000:80"  # Frontend будет доступен на 3000 порту
-#    networks:
-#      - default
-
-#  mosquitto:
-#    image: eclipse-mosquitto
-#    container_name: mosquitto_broker
-#    ports:
-#      - "1883:1883"    # Стандартный порт для MQTT
-#      - "9001:9001"    # Вебсокет порт (необязательно, если нужен WebSocket)
-#    volumes:
-#      - ./mosquitto/config:/mosquitto/config    # Папка для конфигурационных файлов
-#      - ./mosquitto/data:/mosquitto/data        # Папка для данных
-#      - ./mosquitto/log:/mosquitto/log          # Папка для логов
-#
-#  mqtt_stat_service:
-#    container_name: manufactory_mqtt_stat_service
-#    restart: always
-#    build:
-#      context: .  # Используйте корневую директорию, если pyproject.toml в корне
-#      dockerfile: ./src/services/Dockerfile  # Укажите правильный путь к Dockerfile
-#    depends_on:
-#      - mosquitto
+  plc_data_service:
+    build: ./services/plc_data_service
+    restart: always
+    networks:
+      - app-network
 
 
 networks:
   default:
     name: docker_network
     external: true
+  app-network:
+    driver: bridge

@@ -16,14 +16,17 @@ RUN apt-get update && \
     poetry config virtualenvs.create false && \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
+# Настройка рабочей директории
 WORKDIR /app
 
-# Копирование файлов для установки зависимостей
-COPY ../../pyproject.toml ../../poetry.lock ./
-RUN poetry install --no-interaction --no-ansi --only mqtt_stat_service
+# Копирование файлов зависимостей
+COPY poetry.lock pyproject.toml /app/
 
-# Копирование остального кода
-COPY . /app/
+# Установка зависимостей через Poetry
+RUN poetry install --no-interaction --no-ansi
 
-# Запуск скрипта
-CMD ["python", "src/services/mqtt_statistic/statistic.py"]
+# Копирование кода проекта
+COPY src /app/src
+
+# Команда для запуска сервиса
+CMD ["python", "/app/src/plc_data_history/main.py"]
