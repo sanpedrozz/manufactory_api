@@ -1,0 +1,16 @@
+[tool.poetry]
+name = "plc-hub"
+version = "1.0.0"
+description = ""
+authors = ["petrl <sup686@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.13"
+python-snap7 = "^2.0.0"
+pydantic = "^2.9.2"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
