@@ -45,7 +45,7 @@ async def get_printer_params():
 async def get_data_test():
     global coords, coords_counter
 
-    if coords_counter >= 4:
+    if coords_counter >= len(coords):
         coords_counter = 0
         return {"result": "done"}
 

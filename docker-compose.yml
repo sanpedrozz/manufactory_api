@@ -10,15 +10,15 @@ services:
     networks:
       - default
 
-  frontend:
-    container_name: manufactory_frontend
-    build:
-      context: ./src/frontend
-      dockerfile: ./Dockerfile
-    ports:
-      - "3000:80"  # Frontend будет доступен на 3000 порту
-    networks:
-      - default
+#  frontend:
+#    container_name: manufactory_frontend
+#    build:
+#      context: ./src/frontend
+#      dockerfile: ./Dockerfile
+#    ports:
+#      - "3000:80"  # Frontend будет доступен на 3000 порту
+#    networks:
+#      - default
 
 #  mosquitto:
 #    image: eclipse-mosquitto
