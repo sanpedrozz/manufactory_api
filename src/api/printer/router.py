@@ -9,10 +9,10 @@ router = APIRouter()
 
 # Начальные значения
 coords_counter = 0  # Счётчик для переключения
-coords = [{'x': 200, 'y': 200, "a": False},
-          {'x': 2500, 'y': 200, "a": False},
-          {'x': 2500, 'y': 1800, "a": True},
-          {'x': 200, 'y': 1800, "a": True}]
+coords = [{'x': 0, 'y': 0, "a": False},
+          {'x': 2800, 'y': 0, "a": False},
+          {'x': 2800, 'y': 2070, "a": False},
+          {'x': 0, 'y': 2070, "a": False}]
 
 
 @router.get("/get_data", name="get_print_params")
