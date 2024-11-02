@@ -3,7 +3,7 @@ FROM python:3.13.0-slim-bookworm AS builder
 
 # Настройки окружения
 ENV TZ=Europe/Moscow \
-    POETRY_VERSION=1.8.2 \
+    POETRY_VERSION=1.8.4 \
     PYTHONUNBUFFERED=on \
     PYTHONPATH=/app
 
@@ -23,10 +23,10 @@ WORKDIR /app
 COPY poetry.lock pyproject.toml /app/
 
 # Установка зависимостей через Poetry
-RUN poetry install --no-interaction --no-ansi
+RUN poetry install --no-interaction --no-ansi -vvv
 
 # Копирование кода проекта
 COPY src /app/src
 
-# Команда для запуска сервиса
-CMD ["python", "/app/src/plc_data_history/main.py"]
+# Запуск сервиса
+CMD ["uvicorn", "src.app:app", "--host", "0.0.0.0", "--port", "8000"]

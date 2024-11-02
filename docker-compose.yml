@@ -1,18 +1,17 @@
-version: '3.8'
-
 services:
-#  api-gateway:
-#    build: ./api-gateway
-#    ports:
-#      - "7000:80"
-#    depends_on:
-#      - plc_data_service
-#      - plc_alarm_service
-#      - print_service
-#      - telegram_bot_service
-#    networks:
-#      - app-network
+  api-gateway:
+    build: ./api-gateway
+    ports:
+      - "8000:80"
+    depends_on:
+      - plc_data_service
+    networks:
+      - app-network
 
+  plc_data_service:
+    build: services/plc_hub_service
+    networks:
+      - app-network
   api:
     container_name: manufactory_api
     restart: always
@@ -22,11 +21,7 @@ services:
     networks:
       - default
 
-  plc_data_service:
-    build: ./services/plc_data_service
-    restart: always
-    networks:
-      - app-network
+
 
 
 networks:

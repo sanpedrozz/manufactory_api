@@ -55,6 +55,7 @@ models = {
     'DInt': DIntDataType(),
 }
 
+
 class PLC(BaseModel):
     name: str
     ip: str
