@@ -9,9 +9,17 @@ services:
       - app-network
 
   plc_data_service:
-    build: services/plc_hub_service
+    restart: always
+#    build: services/plc_data_hub
+    build:
+      context: .
+      dockerfile: services/plc_data_hub/Dockerfile
+
+    volumes:
+      - ./shared:/app/shared
     networks:
       - app-network
+
   api:
     container_name: manufactory_api
     restart: always

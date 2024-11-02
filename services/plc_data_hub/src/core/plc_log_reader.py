@@ -1,5 +1,6 @@
 import asyncio
 import snap7
+from shared.utils.logger import logger
 
 class PLCReader:
     def __init__(self):

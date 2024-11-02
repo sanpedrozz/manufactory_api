@@ -5,7 +5,7 @@ FROM python:3.13.0-slim-bookworm AS builder
 ENV TZ=Europe/Moscow \
     POETRY_VERSION=1.8.4 \
     PYTHONUNBUFFERED=on \
-    PYTHONPATH=/app
+    PYTHONPATH=/app/src
 
 # Установка зависимостей
 RUN apt-get update && \
@@ -26,7 +26,8 @@ COPY poetry.lock pyproject.toml /app/
 RUN poetry install --no-interaction --no-ansi -vvv
 
 # Копирование кода проекта
-COPY src /app/src
+COPY services/plc_data_hub/src /app/src
+COPY shared /app/shared
 
 # Запуск сервиса
 CMD ["uvicorn", "src.app:app", "--host", "0.0.0.0", "--port", "8000"]
