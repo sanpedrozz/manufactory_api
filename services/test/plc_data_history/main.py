@@ -74,7 +74,6 @@ def get_var_value(data):
 
 if __name__ == '__main__':
     while True:
-        # db_data = client.db_read(11, 0, 268)
-        # get_strings_by_data(plc_paste)
-        # time.sleep(0.1)
-        print('OK')
+        db_data = client.db_read(11, 0, 268)
+        get_strings_by_data(plc_paste)
+        time.sleep(0.1)
