@@ -93,18 +93,14 @@ class PLCClient:
         return self.client.db_write(db_number, start, data)
 
 
-# Предположим, что ваш класс PLCClient уже определен с методами __enter__ и __exit__
-
-plc_ip = '192.168.1.15'
-
-# Используем конструкцию `with` для автоматического подключения и отключения от PLC
-c = 0
-with PLCClient(plc_ip) as plc_client:
-    while True:
-        # Внутри блока `with` соединение с PLC установлено, и мы можем работать с plc_client
-        data = plc_client.read_data(db_number=1, offset=0, size=10)
-        c += 1
-        print(c)
-        sleep(0.1)
-
-# При выходе из блока `with` метод __exit__ автоматически вызовет disconnect
+if __name__ == '__main__':
+    plc_ip = '192.168.1.15'
+    # Используем конструкцию `with` для автоматического подключения и отключения от PLC
+    c = 0
+    with PLCClient(plc_ip) as plc_client:
+        while True:
+            # Внутри блока `with` соединение с PLC установлено, и мы можем работать с plc_client
+            data = plc_client.read_data(db_number=1, offset=0, size=10)
+            c += 1
+            print(c)
+            sleep(0.1)
