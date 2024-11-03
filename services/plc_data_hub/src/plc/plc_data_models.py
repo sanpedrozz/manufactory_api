@@ -14,7 +14,7 @@ class DataType:
 
 class StringDataType(DataType):
     def __init__(self, size=256):
-        super().__init__(f"String[{size}]", size, get_string)
+        super().__init__(f"String[{size}]", size + 2 if size <= 254 else size, get_string)
 
 
 class IntDataType(DataType):
@@ -49,11 +49,12 @@ class DIntDataType(DataType):
 
 # Соответствие типов данных моделям
 models: dict[str, DataType] = {
-    f'String[{i}]': StringDataType(i) for i in range(1, 257)
+    f'String[{i}]': StringDataType(i) for i in range(1, 255)
 }
 
 # Добавляем остальные типы данных
 models.update({
+    'String': StringDataType(),
     'Int': IntDataType(),
     'Real': RealDataType(),
     'Bool': BoolDataType(),
@@ -65,3 +66,5 @@ models.update({
 if __name__ == '__main__':
     for model_name, model_instance in models.items():
         print(f"{model_name}: Size = {model_instance.size}")
+
+print(models['Int'].size)
