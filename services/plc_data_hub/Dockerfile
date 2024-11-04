@@ -14,7 +14,8 @@ RUN apt-get update && \
     echo $TZ > /etc/timezone && \
     pip install "poetry==$POETRY_VERSION" && \
     poetry config virtualenvs.create false && \
-    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* \
+    apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 # Настройка рабочей директории
 WORKDIR /app
@@ -23,7 +24,7 @@ WORKDIR /app
 COPY poetry.lock pyproject.toml /app/
 
 # Установка зависимостей через Poetry
-RUN poetry install --no-interaction --no-ansi -vvv
+RUN poetry install --no-root --no-interaction --no-ansi -vvv
 
 # Копирование кода проекта
 COPY services/plc_data_hub/src /app/src

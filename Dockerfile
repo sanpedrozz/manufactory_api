@@ -24,7 +24,7 @@ WORKDIR /scr
 
 # Копирование файлов и установка зависимостей
 COPY pyproject.toml poetry.lock /scr/
-RUN poetry install --no-interaction --no-ansi -vvv
+RUN poetry install --no-root --no-interaction --no-ansi -vvv
 
 # Копирование оставшихся файлов
 COPY . /scr/
