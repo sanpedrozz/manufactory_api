@@ -14,7 +14,6 @@ services:
     build:
       context: .
       dockerfile: services/plc_data_hub/Dockerfile
-
     volumes:
       - ./shared:/app/shared
     networks:
@@ -28,6 +27,7 @@ services:
       - "7000:7000"
     networks:
       - default
+
 
 networks:
   default:
