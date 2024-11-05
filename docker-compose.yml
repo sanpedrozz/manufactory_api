@@ -29,9 +29,6 @@ services:
     networks:
       - default
 
-
-
-
 networks:
   default:
     name: docker_network
