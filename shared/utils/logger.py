@@ -12,9 +12,7 @@ formatter = colorlog.ColoredFormatter(
         'WARNING': 'yellow',
         'ERROR': 'red',
         'CRITICAL': 'bold_red',
-    },
-    reset=True,
-    style='%'
+    }
 )
 
 # Создание объекта logging.StreamHandler
