@@ -27,8 +27,8 @@ COPY poetry.lock pyproject.toml /app/
 RUN poetry install --no-root --no-interaction --no-ansi -vvv
 
 # Копирование кода проекта
-COPY services/plc_data_hub/src /app/src
+COPY services/plc_data_hub/src /app/services/plc_data_hub/src
 COPY shared /app/shared
 
 # Запуск сервиса
-CMD ["uvicorn", "src.app:app", "--host", "0.0.0.0", "--port", "8000"]
+CMD ["uvicorn", "services.plc_data_hub.src.app:app", "--host", "0.0.0.0", "--port", "8000"]
