@@ -1,7 +1,9 @@
 from pydantic import PostgresDsn, computed_field
 from pydantic_core import MultiHostUrl
 from pydantic_settings import BaseSettings, SettingsConfigDict
+import logging
 
+logging.getLogger('config').setLevel(logging.WARNING)
 
 class Settings(BaseSettings):
     model_config = SettingsConfigDict(

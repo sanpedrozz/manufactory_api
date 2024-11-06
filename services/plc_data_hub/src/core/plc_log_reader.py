@@ -95,6 +95,7 @@ class PLCReader:
                 await asyncio.sleep(0.1)
 
 
+
 # Запускаем читатель PLC
-reader = PLCReader('192.168.23.65')
-asyncio.run(reader.run())
+# reader = PLCReader('192.168.23.65')
+# asyncio.run(reader.run())
