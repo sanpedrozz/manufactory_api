@@ -1,23 +1,23 @@
 services:
-  api-gateway:
-    restart: always
-    build: ./api-gateway
-    ports:
-      - "8000:80"
-    depends_on:
-      - plc_data_service
-    networks:
-      - app-network
-
-  plc_data_service:
-    restart: always
-    build:
-      context: .
-      dockerfile: services/plc_data_hub/Dockerfile
-    volumes:
-      - ./shared:/app/shared
-    networks:
-      - app-network
+#  api-gateway:
+#    restart: always
+#    build: ./api-gateway
+#    ports:
+#      - "8000:80"
+#    depends_on:
+#      - plc_data_service
+#    networks:
+#      - app-network
+#
+#  plc_data_service:
+#    restart: always
+#    build:
+#      context: .
+#      dockerfile: services/plc_data_hub/Dockerfile
+#    volumes:
+#      - ./shared:/app/shared
+#    networks:
+#      - app-network
 
   api:
     container_name: manufactory_api
