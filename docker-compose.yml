@@ -6,6 +6,7 @@ services:
       - "8000:80"
     depends_on:
       - plc_data_service
+      - item_checker_service
     networks:
       - app-network
 
@@ -14,6 +15,15 @@ services:
     build:
       context: .
       dockerfile: services/plc_data_hub/Dockerfile
+    volumes:
+      - ./shared:/app/shared
+    networks:
+      - app-network
+
+  item_checker_service:
+    build:
+      context: .
+      dockerfile: services/item_checker/Dockerfile
     volumes:
       - ./shared:/app/shared
     networks:

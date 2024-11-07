@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Таблица деталей</title>
+    <link rel="stylesheet" href="/item-checker/static/styles.css">
+</head>
+<body>
+<div class="container">
+    <h1>Результаты поиска</h1>
+    <table>
+        <thead>
+        <tr>
+            <th>Деталь ID</th>
+            <th>Присаживается</th>
+            <th>Кромка</th>
+            <th>Факт операции</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for row in table_data %}
+        <tr>
+            <td>{{ row.label_id }}</td>
+            <td>{{ row.is_preassembled }}</td>
+            <td>{{ row.edge_info }}</td>
+            <td>{{ row.operation_fact }}</td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    <br>
+    <a href="/" class="btn">Вернуться к форме</a>
+</div>
+</body>
+</html>
