@@ -7,10 +7,10 @@ class Settings(BaseSettings):
     model_config = SettingsConfigDict(
         env_file=".env", env_ignore_empty=True, extra="ignore"
     )
-    POSTGRES_USER: str
-    POSTGRES_PASSWORD: str
-    POSTGRES_HOST: str
-    POSTGRES_DB: str
+    POSTGRES_USER_MANUFACTORY: str
+    POSTGRES_PASSWORD_MANUFACTORY: str
+    POSTGRES_HOST_MANUFACTORY: str
+    POSTGRES_DB_MANUFACTORY: str
 
     BOT_TOKEN_TEST: str
     CHAT_ID_TEST: str
@@ -35,10 +35,10 @@ class Settings(BaseSettings):
         """
         url = MultiHostUrl.build(
             scheme="postgresql+asyncpg",
-            username=self.POSTGRES_USER,
-            password=self.POSTGRES_PASSWORD,
-            host=self.POSTGRES_HOST,
-            path=self.POSTGRES_DB,
+            username=self.POSTGRES_USER_MANUFACTORY,
+            password=self.POSTGRES_PASSWORD_MANUFACTORY,
+            host=self.POSTGRES_HOST_MANUFACTORY,
+            path=self.POSTGRES_DB_MANUFACTORY,
         )
         return str(url)
 
