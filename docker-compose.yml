@@ -10,6 +10,17 @@ services:
     networks:
       - app-network
 
+  mosquitto:
+    image: eclipse-mosquitto:latest
+    container_name: mosquitto
+    ports:
+      - "1883:1883"  # порт для MQTT
+      - "9001:9001"  # веб-сокет (если нужен)
+    volumes:
+      - ./mosquitto/config:/mosquitto/config  # монтирование конфигурационного файла
+      - ./mosquitto/data:/mosquitto/data  # монтирование данных
+    restart: always
+
   plc_data_service:
     restart: always
     build:
@@ -28,6 +39,17 @@ services:
       - ./shared:/app/shared
     networks:
       - app-network
+
+  hmi_statistic_service:
+    build:
+      context: .
+      dockerfile: services/hmi_statistic/Dockerfile
+    volumes:
+      - ./shared:/app/shared
+    depends_on:
+      - mosquitto
+    networks:
+      - default
 
   api:
     container_name: manufactory_api

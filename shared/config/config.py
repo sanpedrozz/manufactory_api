@@ -11,20 +11,34 @@ class Settings(BaseSettings):
     model_config = SettingsConfigDict(
         env_file=".env", env_ignore_empty=True, extra="ignore"
     )
+
+    #   Postgres MANUFACTORY
     POSTGRES_USER_MANUFACTORY: str
     POSTGRES_PASSWORD_MANUFACTORY: str
     POSTGRES_HOST_MANUFACTORY: str
     POSTGRES_DB_MANUFACTORY: str
 
+    #   Postgres INDUSTRIAL
     POSTGRES_USER_INDUSTRIAL: str
     POSTGRES_PASSWORD_INDUSTRIAL: str
     POSTGRES_HOST_INDUSTRIAL: str
     POSTGRES_DB_INDUSTRIAL: str
 
+    #   Telegram-Bot
     BOT_TOKEN_TEST: str
     CHAT_ID_TEST: str
     BOT_TOKEN: str
     CHAT_ID: str
+
+    #   API connect
+    API_IP: str
+    API_PORT: str
+    API_POSTFIX: str
+
+    #   MQTT
+    MQTT_CLIENT_ID: str
+    MQTT_HOST: str
+    MQTT_PORT: int
 
     @computed_field
     @property
