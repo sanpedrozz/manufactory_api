@@ -14,8 +14,8 @@ services:
     image: eclipse-mosquitto:latest
     container_name: mosquitto
     ports:
-      - "1883:1883"  # порт для MQTT
-      - "9001:9001"  # веб-сокет (если нужен)
+      - "1884:1883"
+      - "9002:9001"
     volumes:
       - ./mosquitto/config:/mosquitto/config  # монтирование конфигурационного файла
       - ./mosquitto/data:/mosquitto/data  # монтирование данных
