@@ -1,5 +1,6 @@
 import asyncio
 from json import dumps
+
 import aiohttp
 from paho.mqtt.client import Client, CallbackAPIVersion
 
@@ -17,18 +18,24 @@ async def statistic(mqtt_client, place_id):
             mqtt_client.publish(topic, message)
 
 
+async def periodic_statistic(client, places, interval=5):
+    """Периодически выполняет сбор статистики для заданных мест."""
+    while True:
+        tasks = [statistic(client, place) for place in places]
+        await asyncio.gather(*tasks)
+        await asyncio.sleep(interval)  # Задержка между циклами
+
+
 async def main():
+    await asyncio.sleep(10)
     places = [25, 29, 30, 32]
     client = Client(client_id=settings.MQTT_CLIENT_ID, callback_api_version=CallbackAPIVersion.VERSION2)
     client.connect(settings.MQTT_HOST, settings.MQTT_PORT)
 
-    tasks = []
-    for place in places:
-        tasks.append(statistic(client, place))
-        await asyncio.sleep(5)  # Ограничение на 5 секунд между запросами для каждого place
-
-    await asyncio.gather(*tasks)
-    client.disconnect()
+    try:
+        await periodic_statistic(client, places, interval=5)
+    finally:
+        client.disconnect()
 
 
 if __name__ == "__main__":

@@ -20,6 +20,14 @@ services:
       - ./mosquitto/config:/mosquitto/config  # монтирование конфигурационного файла
       - ./mosquitto/data:/mosquitto/data  # монтирование данных
     restart: always
+    healthcheck:
+      test: ["CMD", "nc", "-z", "localhost", "1883"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+    networks:
+      - app-network
+
 
   plc_data_service:
     restart: always
@@ -47,9 +55,10 @@ services:
     volumes:
       - ./shared:/app/shared
     depends_on:
-      - mosquitto
+      mosquitto:
+        condition: service_healthy
     networks:
-      - default
+      - app-network
 
   api:
     container_name: manufactory_api

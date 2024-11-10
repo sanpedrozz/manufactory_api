@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "hmi-statistic"
-version = "0.1.0"
+version = "1.0.0"
 description = ""
 authors = ["petrl <sup686@gmail.com>"]
 readme = "README.md"
