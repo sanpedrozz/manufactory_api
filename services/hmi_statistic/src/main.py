@@ -18,7 +18,7 @@ async def statistic(mqtt_client, place_id):
             mqtt_client.publish(topic, message)
 
 
-async def periodic_statistic(client, places, interval=10):
+async def periodic_statistic(client, places, interval=5):
     """Периодически выполняет сбор статистики для заданных мест."""
     while True:
         tasks = [statistic(client, place) for place in places]
