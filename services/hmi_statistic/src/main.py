@@ -27,7 +27,7 @@ async def periodic_statistic(client, places, interval=10):
 
 
 async def main():
-    await asyncio.sleep(10)
+    # await asyncio.sleep(10)
     places = [25, 29, 30, 32]
     client = Client(client_id=settings.MQTT_CLIENT_ID, callback_api_version=CallbackAPIVersion.VERSION2)
     client.connect(settings.MQTT_HOST, settings.MQTT_PORT)
