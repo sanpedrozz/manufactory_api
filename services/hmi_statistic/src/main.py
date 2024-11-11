@@ -14,11 +14,11 @@ async def statistic(mqtt_client, place_id):
         async with session.get(f'{API}/controllers/edge_work_stat/{place_id}') as response:
             data = await response.json()
             topic = f"industrial_statistic_hmi/{place_id}"
-            message = dumps({'meters': data['meters'], 'count': data['count']})
+            message = dumps({'meters': round(data['meters'], 2), 'count': data['count']})
             mqtt_client.publish(topic, message)
 
 
-async def periodic_statistic(client, places, interval=5):
+async def periodic_statistic(client, places, interval=3):
     """Периодически выполняет сбор статистики для заданных мест."""
     while True:
         tasks = [statistic(client, place) for place in places]
@@ -33,7 +33,7 @@ async def main():
     client.connect(settings.MQTT_HOST, settings.MQTT_PORT)
 
     try:
-        await periodic_statistic(client, places, interval=5)
+        await periodic_statistic(client, places)
     finally:
         client.disconnect()
 
