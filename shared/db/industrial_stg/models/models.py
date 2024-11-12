@@ -1,5 +1,5 @@
-from sqlalchemy import Column, BigInteger, Integer, String, Double, ForeignKey, DateTime, func
-from sqlalchemy.orm import declarative_base
+from sqlalchemy import Column, BigInteger, Integer, String, Double, ForeignKey, Boolean, DateTime, func
+from sqlalchemy.orm import declarative_base, relationship
 
 # Настройка базы для моделей SQLAlchemy
 Base = declarative_base()
@@ -19,12 +19,30 @@ class Item(Base):
 
 
 # Определение модели IndustryOperationsHistory
+# Definition of the Place model
+class Place(Base):
+    __tablename__ = 'places'
+    id = Column(BigInteger, primary_key=True)
+    name = Column(String, nullable=False)
+    # Other fields...
+
+
+# Definition of the IndustryOperationsHistory model
 class IndustryOperationsHistory(Base):
     __tablename__ = 'industry_operations_history'
     id = Column(BigInteger, primary_key=True)
-    place_id = Column(Integer, ForeignKey('places.id', ondelete='CASCADE'), nullable=False)
-    object_id = Column(BigInteger, nullable=False)
-    operation_id = Column(Integer, nullable=False)
+    place_id = Column(BigInteger, ForeignKey('places.id', ondelete='CASCADE'), nullable=False)
+    object_id = Column(BigInteger, ForeignKey('industry_operations_history_objects.id', ondelete='SET NULL'),
+                       nullable=False)
+    operation_id = Column(Integer, ForeignKey('operations.id'), nullable=False)
     operation_property1 = Column(Integer)
     operation_property2 = Column(Integer)
+    manual = Column(Boolean, default=False, nullable=False)
+    error = Column(Boolean, default=False, nullable=False)
+    error_description = Column(String)
     creation_dt = Column(DateTime, default=func.now())
+    employee_id = Column(Integer, ForeignKey('employees.id'))
+    comment = Column(String, default="")
+
+    # Relationship to access the place's name
+    place = relationship("Place", backref="operations_history")

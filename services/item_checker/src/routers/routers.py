@@ -19,15 +19,18 @@ async def show_form(request: Request):
 # Маршрут для обработки данных формы и отображения таблицы
 @router.post("/view", response_class=HTMLResponse)
 async def display_table(request: Request, label_input: str = Form(...)):
-    # Обработка входных данных: удаление пробелов и запятых
+    # Process input data to extract label IDs
     label_ids = list(map(int, re.findall(r'\d+', label_input)))
 
+    # Get items and history results including place name
     items, history_results = await get_items_info(label_ids)
 
-    # Создаем операции для каждого объекта с включением времени и места для каждой операции
-    operation_facts = {record.object_id: [] for record in history_results}
-
+    # Prepare operation facts with place name and creation time
+    operation_facts = {}
     for record in history_results:
+        place_name = record.place.name if record.place else "Неизвестное место"
+        creation_time = record.creation_dt.strftime('%Y-%m-%d %H:%M:%S')
+
         fact_description = ""
         if record.operation_id == 17 and record.operation_property1:
             if record.operation_property1 in [1, 2]:
@@ -38,11 +41,12 @@ async def display_table(request: Request, label_input: str = Form(...)):
             fact_description = "ПРИСАДКА"
 
         if fact_description:
-            # Append operation with time and place
-            fact_with_details = f"{fact_description} (Время: {record.creation_dt.strftime('%Y-%m-%d %H:%M:%S')}, Место: {record.place_id})"
-            operation_facts[record.object_id].append(fact_with_details)
+            # Add fact with time and place name
+            operation_facts.setdefault(record.object_id, []).append(
+                f"{fact_description} (Время: {creation_time}, Место: {place_name})"
+            )
 
-    # Формируем данные для таблицы
+    # Prepare data for table
     table_data = []
     for item in items:
         edges = [
@@ -63,4 +67,5 @@ async def display_table(request: Request, label_input: str = Form(...)):
             "edge_info": edge_info,
             "operation_fact": operation_fact
         })
+
     return templates.TemplateResponse("table.html", {"request": request, "table_data": table_data})
