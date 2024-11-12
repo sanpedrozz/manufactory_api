@@ -1,4 +1,4 @@
-from sqlalchemy import Column, BigInteger, Integer, String, Double, ForeignKey
+from sqlalchemy import Column, BigInteger, Integer, String, Double, ForeignKey, DateTime, func
 from sqlalchemy.orm import declarative_base
 
 # Настройка базы для моделей SQLAlchemy
@@ -22,6 +22,9 @@ class Item(Base):
 class IndustryOperationsHistory(Base):
     __tablename__ = 'industry_operations_history'
     id = Column(BigInteger, primary_key=True)
+    place_id = Column(Integer, ForeignKey('places.id', ondelete='CASCADE'), nullable=False)
     object_id = Column(BigInteger, nullable=False)
     operation_id = Column(Integer, nullable=False)
     operation_property1 = Column(Integer)
+    operation_property2 = Column(Integer)
+    creation_dt = Column(DateTime, default=func.now())

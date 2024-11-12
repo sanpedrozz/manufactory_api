@@ -24,16 +24,23 @@ async def display_table(request: Request, label_input: str = Form(...)):
 
     items, history_results = await get_items_info(label_ids)
 
-    # Создаем операции для каждого объекта
+    # Создаем операции для каждого объекта с включением времени и места для каждой операции
     operation_facts = {record.object_id: [] for record in history_results}
+
     for record in history_results:
+        fact_description = ""
         if record.operation_id == 17 and record.operation_property1:
             if record.operation_property1 in [1, 2]:
-                operation_facts[record.object_id].append(f"L{record.operation_property1}")
+                fact_description = f"L{record.operation_property1}"
             elif record.operation_property1 in [3, 4]:
-                operation_facts[record.object_id].append(f"W{record.operation_property1}")
+                fact_description = f"W{record.operation_property1}"
         elif record.operation_id == 18:
-            operation_facts[record.object_id].append("ПРИСАДКА")
+            fact_description = "ПРИСАДКА"
+
+        if fact_description:
+            # Append operation with time and place
+            fact_with_details = f"{fact_description} (Время: {record.creation_dt.strftime('%Y-%m-%d %H:%M:%S')}, Место: {record.place_id})"
+            operation_facts[record.object_id].append(fact_with_details)
 
     # Формируем данные для таблицы
     table_data = []
@@ -41,13 +48,14 @@ async def display_table(request: Request, label_input: str = Form(...)):
         edges = [
             f"L1: {item.edge_length_1}" if item.edge_length_1 else "",
             f"L2: {item.edge_length_2}" if item.edge_length_2 else "",
-            f"W1: {item.edge_width_3}" if item.edge_width_3 else "",
-            f"W2: {item.edge_width_4}" if item.edge_width_4 else ""
+            f"W3: {item.edge_width_3}" if item.edge_width_3 else "",
+            f"W4: {item.edge_width_4}" if item.edge_width_4 else ""
         ]
         edge_info = ", ".join(filter(None, edges)) or "Нет данных о кромке"
         is_preassembled = 'да' if item.plan_set_id and '18' in item.plan_set_id else 'нет'
-        operation_fact = "; ".join(
-            operation_facts.get(item.history_object_id, ["Нет операции"])).strip() or "Нет операции"
+
+        operation_fact = "<br>".join(
+            operation_facts.get(item.history_object_id, ["Нет операции"])) or "Нет операции"
 
         table_data.append({
             "label_id": item.label_id,

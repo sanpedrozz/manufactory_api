@@ -23,7 +23,7 @@
             <td>{{ row.label_id }}</td>
             <td>{{ row.is_preassembled }}</td>
             <td>{{ row.edge_info }}</td>
-            <td>{{ row.operation_fact }}</td>
+            <td>{{ row.operation_fact|safe }}</td>  <!-- Use 'safe' to render HTML for line breaks -->
         </tr>
         {% endfor %}
         </tbody>
