@@ -25,7 +25,8 @@ COPY poetry.lock pyproject.toml /app/
 
 # Установка зависимостей через Poetry
 RUN poetry install --no-root --no-interaction --no-ansi -vvv && \
-    pip install paho-mqtt  # Устанавливаем paho-mqtt через pip
+    pip install paho-mqtt  # Устанавливаем paho-mqtt через pip && \
+    pip install colorlog
 
 # Копирование кода проекта
 COPY services/hmi_statistic/src /app/services/hmi_statistic/src
