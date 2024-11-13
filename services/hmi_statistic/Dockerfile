@@ -36,4 +36,4 @@ COPY ../../.env /app/.env
 RUN ls -R /app
 
 # Команда для запуска скрипта
-CMD ["python", "services/hmi_statistic/src/main.py"]
+CMD ["python", "services/hmi_statistic/src/app.py"]
