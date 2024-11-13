@@ -18,7 +18,7 @@ async def statistic(mqtt_client, place_id):
                     logger.error(f"Error: Received status {response.status} from API")
                     return
                 else:
-                    logger.info(f"{response}")
+                    logger.info(f"response: {response}")
 
                 data = await response.json()
 
@@ -30,7 +30,10 @@ async def statistic(mqtt_client, place_id):
                 formatted_meters = f"{meters:.2f}"
 
                 topic = f"industrial_statistic_hmi/{place_id}"
+                logger.info(f"topic: {topic}")
+
                 message = dumps({'meters': formatted_meters, 'count': count})
+                logger.info(f"message: {message}")
 
                 # Публикуем сообщение
                 mqtt_client.publish(topic, message)
