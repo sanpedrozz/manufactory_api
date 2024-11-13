@@ -18,7 +18,7 @@ async def statistic(mqtt_client, place_id):
                     logger.error(f"Error: Received status {response.status} from API")
                     return
                 else:
-                    logger.info(f"response")
+                    logger.info(f"{response}")
 
                 data = await response.json()
 
