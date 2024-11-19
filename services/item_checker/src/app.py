@@ -1,8 +1,8 @@
 from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
+from fastapi.templating import Jinja2Templates
 
 from services.item_checker.src.routers import routers
-from fastapi.templating import Jinja2Templates
 
 app = FastAPI()
 
