@@ -3,8 +3,8 @@ from logging.config import fileConfig
 from alembic import context
 from sqlalchemy import engine_from_config, pool
 
-from src.config import settings
-from src.db.models import OperationHistory  # noqa
+from shared.config.config import settings
+from shared.db.manufactory.models import *  # noqa
 
 # Конфигурация Alembic
 config = context.config
@@ -14,7 +14,7 @@ if config.config_file_name is not None:
     fileConfig(config.config_file_name)
 
 # Устанавливаем строку подключения из Settings
-config.set_main_option("sqlalchemy.url", settings.manufactory_db_url + "?async_fallback=True")
+config.set_main_option("sqlalchemy.url", f"{settings.manufactory_db_url}?async_fallback=True")
 
 # Импортируем модели для автоматической генерации миграций
 from src.db.base import Base
