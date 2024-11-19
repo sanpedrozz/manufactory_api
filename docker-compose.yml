@@ -10,23 +10,23 @@ services:
     networks:
       - app-network
 
-#  mosquitto:
-#    image: eclipse-mosquitto:latest
-#    container_name: mosquitto
-#    ports:
-#      - "1884:1883"
-#      - "9002:9001"
-#    volumes:
-#      - ./mosquitto/config:/mosquitto/config  # монтирование конфигурационного файла
-#      - ./mosquitto/data:/mosquitto/data  # монтирование данных
-#    restart: always
-#    healthcheck:
-#      test: ["CMD", "nc", "-z", "localhost", "1883"]
-#      interval: 5s
-#      timeout: 3s
-#      retries: 5
-#    networks:
-#      - app-network
+  #  mosquitto:
+  #    image: eclipse-mosquitto:latest
+  #    container_name: mosquitto
+  #    ports:
+  #      - "1884:1883"
+  #      - "9002:9001"
+  #    volumes:
+  #      - ./mosquitto/config:/mosquitto/config  # монтирование конфигурационного файла
+  #      - ./mosquitto/data:/mosquitto/data  # монтирование данных
+  #    restart: always
+  #    healthcheck:
+  #      test: ["CMD", "nc", "-z", "localhost", "1883"]
+  #      interval: 5s
+  #      timeout: 3s
+  #      retries: 5
+  #    networks:
+  #      - app-network
 
 
   plc_data_service:
@@ -48,17 +48,17 @@ services:
     networks:
       - app-network
 
-#  hmi_statistic_service:
-#    build:
-#      context: .
-#      dockerfile: services/hmi_statistic/Dockerfile
-#    volumes:
-#      - ./shared:/app/shared
-#    depends_on:
-#      mosquitto:
-#        condition: service_healthy
-#    networks:
-#      - app-network
+  #  hmi_statistic_service:
+  #    build:
+  #      context: .
+  #      dockerfile: services/hmi_statistic/Dockerfile
+  #    volumes:
+  #      - ./shared:/app/shared
+  #    depends_on:
+  #      mosquitto:
+  #        condition: service_healthy
+  #    networks:
+  #      - app-network
 
   api:
     container_name: manufactory_api

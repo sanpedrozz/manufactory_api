@@ -1,19 +1,26 @@
 import asyncio
 
+from sqlalchemy.ext.asyncio import AsyncSession
+
 from services.plc_data_hub.src.plc import PLCClient, models
+from shared.db.manufactory.models.models import PLCData
 from shared.utils.logger import logger
+
 DB_NUMBER = 500
 
 
-class ItemSendReader:
+class Reader:
     """Класс для взаимодействия с ПЛК, чтения данных из заданного DB и извлечения информации о типах данных."""
 
-    def __init__(self, ip: str):
-        """Инициализация клиента PLC и создание буфера данных."""
+    def __init__(self, ip: str, db_session: AsyncSession):
+        if db_session is None:
+            raise ValueError("db_session не может быть None")  # Дополнительная проверка
         self.client = PLCClient(ip)
+        self.db_session = db_session
         self.data_buffer = []
         self.filled_array = 0
         self.readings = {}
+        self.last_readings = {}
 
     def _get_filled_array(self):
         """
@@ -62,13 +69,23 @@ class ItemSendReader:
                 # Читаем данные из указанного DB, используя смещение в байтах и бите
                 data = self.client.read_data(db_number=db_number, offset=byte_offset, size=model.size)
 
-                # Применяем функцию чтения из модели
-                value = model.read_func(data, bit_offset)
-                self.readings[name] = value  # Добавляем в словарь {name: value}
+                # Разбираем прочитанные данные
+                self.readings[name] = model.read_func(data, bit_offset)
             else:
-                print(f"Неизвестный тип данных: {data_type}")
+                logger.warning(f'Неизвестный тип данных: {data_type}')
 
-        return self.readings  # Возвращаем список значений
+    async def save_changes(self):
+        """
+        Сохраняет изменения в базу данных, если значения отличаются от предыдущих.
+        """
+        print(self.readings.items())
+        for name, value in self.readings.items():
+            if self.last_readings.get(name) != value:
+                new_data = PLCData(name=name, value=str(value))
+                await new_data.add(self.db_session)  # Используем метод add из Base
+
+        # Обновляем last_readings
+        self.last_readings = self.readings.copy()
 
     async def run(self):
         """
@@ -86,11 +103,6 @@ class ItemSendReader:
                     self.data_buffer = self._get_array(current_filled_array)
                     prev_filled_array = current_filled_array
 
-                read_from_db = self.read_from_db()
-                logger.info(f'{read_from_db}')
+                self.read_from_db()
+                await self.save_changes()
                 await asyncio.sleep(0.1)
-
-
-# Запускаем читатель PLC
-reader = ItemSendReader('192.168.23.190')
-asyncio.run(reader.run())

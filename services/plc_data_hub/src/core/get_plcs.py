@@ -5,14 +5,17 @@ from shared.db.manufactory.models.models import Place
 
 
 async def fetch_places():
-    # Открываем сессию для базы данных
+    """
+    Получить список PLC с подходящими именами и IP-адресами.
+    :return: Список записей Place с заполненными IP.
+    """
     async with AsyncSessionFactory() as session:
-        # Получаем все записи из таблицы Place
         places = await Place.get_all(session)
-        for place in places:
-            if place.ip is not None and place.name == "Nanxing 8.2 (Кромочник)":
-                print(place.ip)
+        return [
+            place for place in places
+            if place.ip is not None and 'Nanxing 8.2' in place.name]
 
 
-# Запуск функции
-asyncio.run(fetch_places())
+if __name__ == "__main__":
+    # Запуск функции
+    asyncio.run(fetch_places())

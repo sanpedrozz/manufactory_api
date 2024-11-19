@@ -190,3 +190,11 @@ class AlarmHistory(Base):
                 status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
                 detail=str(ex)
             ) from ex
+
+
+class PLCData(Base):
+    __tablename__ = "plc_data"
+    id = Column(BigInteger, primary_key=True, autoincrement=True)
+    dt_created = Column(DateTime, default=datetime.now, nullable=False)
+    name = Column(String, nullable=False)  # Имя переменной
+    value = Column(Text, nullable=False)  # Значение переменной в строковом формате
