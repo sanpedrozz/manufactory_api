@@ -55,8 +55,8 @@ async def display_table(request: Request, label_input: str = Form(...)):
             f"W3: {item.edge_width_3}" if item.edge_width_3 else "",
             f"W4: {item.edge_width_4}" if item.edge_width_4 else ""
         ]
-        edge_info = ", ".join(filter(None, edges)) or "Нет данных о кромке"
-        is_preassembled = 'да' if item.plan_set_id and '18' in item.plan_set_id else 'нет'
+        edge_info = ", ".join(filter(None, edges)) or "Нет"
+        is_preassembled = 'Да' if item.plan_set_id and '18' in item.plan_set_id else 'Нет'
 
         operation_fact = "<br>".join(
             operation_facts.get(item.history_object_id, ["Нет операции"])) or "Нет операции"
