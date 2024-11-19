@@ -8,7 +8,7 @@ from src.config import settings as global_settings
 logging.getLogger('sqlalchemy.engine').setLevel(logging.WARNING)
 
 engine = create_async_engine(
-    global_settings.asyncpg_url,
+    global_settings.manufactory_db_url,
     future=True,
     echo=False,
 )
