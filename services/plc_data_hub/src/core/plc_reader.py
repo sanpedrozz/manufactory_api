@@ -1,4 +1,5 @@
 import asyncio
+import json
 
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -79,9 +80,19 @@ class Reader:
         Сохраняет изменения в базу данных, если значения отличаются от предыдущих.
         """
         for name, value in self.readings.items():
-            if self.last_readings.get(name) != value:
+            if isinstance(value, list):  # Если это список словарей
+                current_items = value  # Оставляем как есть, если уже словари
+                previous_items = self.last_readings.get(name, [])
+
+                # Сравниваем элементы списка
+                for current_item in current_items:
+                    if current_item not in previous_items:
+                        new_data = PLCData(name=name, value=str(current_item))
+                        await new_data.add(self.db_session)
+
+            elif self.last_readings.get(name) != value:  # Если это не список
                 new_data = PLCData(name=name, value=str(value))
-                await new_data.add(self.db_session)  # Используем метод add из Base
+                await new_data.add(self.db_session)
 
         # Обновляем last_readings
         self.last_readings = self.readings.copy()
