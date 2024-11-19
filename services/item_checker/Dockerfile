@@ -31,7 +31,7 @@ RUN poetry install --no-root --no-interaction --no-ansi -vvv
 # Копирование кода проекта
 COPY services/item_checker/src /app/services/item_checker/src
 COPY shared /app/shared
-COPY ../../.env /app/.env
+COPY .env /app/.env
 
 # Запуск сервиса
 CMD ["uvicorn", "services.item_checker.src.app:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
