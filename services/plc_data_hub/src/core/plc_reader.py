@@ -78,7 +78,6 @@ class Reader:
         """
         Сохраняет изменения в базу данных, если значения отличаются от предыдущих.
         """
-        print(self.readings.items())
         for name, value in self.readings.items():
             if self.last_readings.get(name) != value:
                 new_data = PLCData(name=name, value=str(value))
