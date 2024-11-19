@@ -1,7 +1,7 @@
 import asyncio
 
 from services.plc_data_hub.src.plc import PLCClient, models
-
+from shared.utils.logger import logger
 DB_NUMBER = 500
 
 
@@ -13,7 +13,7 @@ class ItemSendReader:
         self.client = PLCClient(ip)
         self.data_buffer = []
         self.filled_array = 0
-        self.readings = []  # Список для хранения значений в формате {name: value}
+        self.readings = {}
 
     def _get_filled_array(self):
         """
@@ -64,7 +64,7 @@ class ItemSendReader:
 
                 # Применяем функцию чтения из модели
                 value = model.read_func(data, bit_offset)
-                self.readings.append({name: value})  # Добавляем в список словарь {name: value}
+                self.readings[name] = value  # Добавляем в словарь {name: value}
             else:
                 print(f"Неизвестный тип данных: {data_type}")
 
@@ -87,8 +87,7 @@ class ItemSendReader:
                     prev_filled_array = current_filled_array
 
                 read_from_db = self.read_from_db()
-                print(read_from_db)
-                # logger.warning(f'{read_from_db}')
+                logger.info(f'{read_from_db}')
                 await asyncio.sleep(0.1)
 
 
