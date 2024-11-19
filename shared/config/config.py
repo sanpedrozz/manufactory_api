@@ -1,15 +1,18 @@
 import logging
+from pathlib import Path
 
-from pydantic import PostgresDsn, computed_field
-from pydantic_core import MultiHostUrl
+from pydantic import PostgresDsn
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
-logging.getLogger('config').setLevel(logging.WARNING)
+logging.getLogger('config').setLevel(logging.INFO)
 
 
 class Settings(BaseSettings):
     model_config = SettingsConfigDict(
-        env_file=".env", env_ignore_empty=True, extra="ignore"
+        env_file=str(Path(__file__).resolve().parents[2] / ".env"),
+        env_file_encoding="utf-8",
+        env_ignore_empty=True,
+        extra="ignore",
     )
 
     #   Postgres MANUFACTORY
@@ -35,60 +38,28 @@ class Settings(BaseSettings):
     API_PORT: str
     API_POSTFIX: str
 
-    #   MQTT
-    MQTT_CLIENT_ID: str
-    MQTT_HOST: str
-    MQTT_PORT: int
+    @staticmethod
+    def _get_postgres_url(user: str, password: str, host: str, db: str) -> PostgresDsn:
+        url = f"postgresql+asyncpg://{user}:{password}@{host}/{db}"
+        return PostgresDsn(url)  # Создание PostgresDsn из строки
 
-    @computed_field
     @property
-    def asyncpg_url(self) -> PostgresDsn:
-        """
-        This is a computed field that generates a PostgresDsn URL for asyncpg.
-
-        The URL is built using the MultiHostUrl.build method, which takes the following parameters:
-        - scheme: The scheme of the URL. In this case, it is "postgresql+asyncpg".
-        - username: The username for the Postgres database, retrieved from the POSTGRES_USER environment variable.
-        - password: The password for the Postgres database, retrieved from the POSTGRES_PASSWORD environment variable.
-        - host: The host of the Postgres database, retrieved from the POSTGRES_HOST environment variable.
-        - path: The path of the Postgres database, retrieved from the POSTGRES_DB environment variable.
-
-        Returns:
-            PostgresDsn: The constructed PostgresDsn URL for asyncpg.
-        """
-        url = MultiHostUrl.build(
-            scheme="postgresql+asyncpg",
-            username=self.POSTGRES_USER_MANUFACTORY,
-            password=self.POSTGRES_PASSWORD_MANUFACTORY,
-            host=self.POSTGRES_HOST_MANUFACTORY,
-            path=self.POSTGRES_DB_MANUFACTORY,
+    def manufactory_db_url(self) -> PostgresDsn:
+        return self._get_postgres_url(
+            self.POSTGRES_USER_MANUFACTORY,
+            self.POSTGRES_PASSWORD_MANUFACTORY,
+            self.POSTGRES_HOST_MANUFACTORY,
+            self.POSTGRES_DB_MANUFACTORY,
         )
-        return str(url)
 
-    @computed_field
     @property
-    def asyncpg_url_industrial(self) -> PostgresDsn:
-        """
-        This is a computed field that generates a PostgresDsn URL for asyncpg.
-
-        The URL is built using the MultiHostUrl.build method, which takes the following parameters:
-        - scheme: The scheme of the URL. In this case, it is "postgresql+asyncpg".
-        - username: The username for the Postgres database, retrieved from the POSTGRES_USER environment variable.
-        - password: The password for the Postgres database, retrieved from the POSTGRES_PASSWORD environment variable.
-        - host: The host of the Postgres database, retrieved from the POSTGRES_HOST environment variable.
-        - path: The path of the Postgres database, retrieved from the POSTGRES_DB environment variable.
-
-        Returns:
-            PostgresDsn: The constructed PostgresDsn URL for asyncpg.
-        """
-        url = MultiHostUrl.build(
-            scheme="postgresql+asyncpg",
-            username=self.POSTGRES_USER_INDUSTRIAL,
-            password=self.POSTGRES_PASSWORD_INDUSTRIAL,
-            host=self.POSTGRES_HOST_INDUSTRIAL,
-            path=self.POSTGRES_DB_INDUSTRIAL,
+    def industrial_db_url(self) -> PostgresDsn:
+        return self._get_postgres_url(
+            self.POSTGRES_USER_INDUSTRIAL,
+            self.POSTGRES_PASSWORD_INDUSTRIAL,
+            self.POSTGRES_HOST_INDUSTRIAL,
+            self.POSTGRES_DB_INDUSTRIAL,
         )
-        return str(url)
 
 
 settings = Settings()
