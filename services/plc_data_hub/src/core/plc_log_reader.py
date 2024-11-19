@@ -1,12 +1,11 @@
 import asyncio
 
 from services.plc_data_hub.src.plc import PLCClient, models
-from shared.utils.logger import logger
 
 DB_NUMBER = 500
 
 
-class PLCReader:
+class ItemSendReader:
     """Класс для взаимодействия с ПЛК, чтения данных из заданного DB и извлечения информации о типах данных."""
 
     def __init__(self, ip: str):
@@ -22,7 +21,7 @@ class PLCReader:
         :return: Количество заполненных элементов.
         """
         data = self.client.read_data(db_number=DB_NUMBER, offset=0, size=2)
-        return models['Int'].read_func(data, 0)
+        return models['UInt'].read_func(data, 0)
 
     def _get_array(self, filled_array):
         """
@@ -33,13 +32,13 @@ class PLCReader:
         data_list = []  # Создаем список для хранения всех словарей данных
         # Чтение всех данных одним запросом, если возможно
         for i in range(filled_array):
-            data = self.client.read_data(db_number=DB_NUMBER, offset=2 + 50 * i, size=50)
+            data = self.client.read_data(db_number=DB_NUMBER, offset=2 + 60 * i, size=60)
             data_dict = {
                 'name': models['String[20]'].read_func(data, 0),
-                'type': models['String[20]'].read_func(data, 22),
-                'db': models['UInt'].read_func(data, 44),
-                'byte': models['UInt'].read_func(data, 46),
-                'bit': models['USInt'].read_func(data, 48)
+                'type': models['String[30]'].read_func(data, 22),
+                'db': models['UInt'].read_func(data, 54),
+                'byte': models['UInt'].read_func(data, 56),
+                'bit': models['USInt'].read_func(data, 58)
             }
             data_list.append(data_dict)
         return data_list
@@ -59,7 +58,6 @@ class PLCReader:
 
             # Определяем модель на основе типа данных
             model = models.get(data_type)
-
             if model:
                 # Читаем данные из указанного DB, используя смещение в байтах и бите
                 data = self.client.read_data(db_number=db_number, offset=byte_offset, size=model.size)
@@ -82,7 +80,6 @@ class PLCReader:
             while True:
                 # Получаем текущее значение filled_array только один раз за цикл
                 current_filled_array = self._get_filled_array()
-
                 # Проверяем, изменилось ли значение filled_array
                 if current_filled_array != prev_filled_array:
                     # Обновляем данные в буфере только если количество заполненных элементов изменилось
@@ -90,12 +87,11 @@ class PLCReader:
                     prev_filled_array = current_filled_array
 
                 read_from_db = self.read_from_db()
-                logger.warning(f'{read_from_db}')
-
+                print(read_from_db)
+                # logger.warning(f'{read_from_db}')
                 await asyncio.sleep(0.1)
 
 
-
 # Запускаем читатель PLC
-# reader = PLCReader('192.168.23.65')
-# asyncio.run(reader.run())
+reader = ItemSendReader('192.168.23.190')
+asyncio.run(reader.run())

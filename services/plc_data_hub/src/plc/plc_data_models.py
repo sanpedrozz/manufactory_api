@@ -15,13 +15,6 @@ class DataType:
         return self._size
 
 
-class StringDataType(DataType):
-    """Тип данных String с определённым размером, использует get_string из snap7."""
-
-    def __init__(self, size=256):
-        super().__init__(f"String[{size}]", size + 2 if size <= 254 else size, get_string)
-
-
 class IntDataType(DataType):
     """Целочисленный тип данных, использует get_int из snap7."""
 
@@ -64,18 +57,57 @@ class DIntDataType(DataType):
         super().__init__('DInt', 4, get_dint)
 
 
-# Соответствие типов данных моделям
-models: dict[str, DataType] = {
-    f'String[{i}]': StringDataType(i) for i in range(1, 255)
-}
+class StringDataType(DataType):
+    """Тип данных String с определённым размером, использует get_string из snap7."""
 
-# Добавляем остальные типы данных
-models.update({
-    'String': StringDataType(),
+    def __init__(self, size=256):
+        super().__init__(f"String[{size}]", size + 2 if size <= 254 else size, get_string)
+
+
+class ArrayDataType(DataType):
+    """Тип данных Array, представляющий массив из одинаковых элементов."""
+
+    def __init__(self, base_type: DataType, start_index: int, end_index: int):
+        self.base_type = base_type
+        self.start_index = start_index
+        self.end_index = end_index
+        self.length = end_index - start_index + 1
+        name = f"Array[{start_index}..{end_index}] of {base_type.name}"
+        size = base_type.size * self.length
+        super().__init__(name, size, self._read_array)
+
+    def _read_array(self, buffer, offset=0):
+        """Считывает массив из буфера и возвращает список элементов."""
+        values = []
+        for i in range(self.length):
+            element_offset = offset + i * self.base_type.size
+            value = self.base_type.read_func(buffer, element_offset)
+            values.append(value)
+        return values
+
+    def get_element(self, buffer, index, offset=0):
+        """Возвращает элемент массива по индексу."""
+        if index < self.start_index or index > self.end_index:
+            raise IndexError(f"Индекс {index} выходит за границы массива {self.start_index}..{self.end_index}.")
+        element_offset = offset + (index - self.start_index) * self.base_type.size
+        return self.base_type.read_func(buffer, element_offset)
+
+
+models = {
     'Int': IntDataType(),
     'Real': RealDataType(),
     'Bool': BoolDataType(),
     'UInt': UIntDataType(),
     'USInt': USIntDataType(),
     'DInt': DIntDataType(),
-})
+    'String': StringDataType()
+}
+
+models.update({f'String[{i}]': StringDataType(i) for i in range(1, 255)})
+models.update({
+    'Array[1..10] of String[80]': ArrayDataType(StringDataType(80), 1, 10)}
+)
+
+if __name__ == '__main__':
+    for key in models:
+        print(f"{key}: {models[key].size} байт")
