@@ -1,8 +1,12 @@
 import asyncio
+import logging
 
-from services.plc_data_hub.src.core.get_plcs import fetch_places  # Импорт функции из get_plcs.py
-from services.plc_data_hub.src.core.plc_reader import Reader  # Предполагается, что Reader реализован
+from services.plc_data_hub.src.core.get_plcs import fetch_places
+from services.plc_data_hub.src.core.plc_reader import Reader
 from shared.db.manufactory.database import AsyncSessionFactory
+from shared.utils import logger
+
+logging.getLogger("main").setLevel(logging.WARNING)
 
 
 async def initialize_readers():
@@ -10,19 +14,22 @@ async def initialize_readers():
         places = await fetch_places()  # Получаем список PLC
 
         if not places:
-            print("Нет подходящих PLC для подключения.")
+            logger.info("Нет подходящих PLC для подключения.")
             return
 
         tasks = []
-
         for place in places:
-            print(f"Инициализация Reader для {place.name} ({place.ip})")
+            logger.info(f"Инициализация Reader для {place.name} ({place.ip})")
 
             # Передаём реальную сессию
-            reader = Reader(ip=place.ip, db_session=session)
-            tasks.append(reader.run())
+            async with AsyncSessionFactory() as place_session:
+                reader = Reader(ip=place.ip, db_session=place_session)
+                tasks.append(reader.run())
 
-        await asyncio.gather(*tasks)
+        results = await asyncio.gather(*tasks, return_exceptions=True)
+        for result in results:
+            if isinstance(result, Exception):
+                logger.error(f"Ошибка в задаче: {result}")
 
 
 if __name__ == "__main__":
