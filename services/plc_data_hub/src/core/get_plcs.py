@@ -13,7 +13,7 @@ async def fetch_places():
         places = await Place.get_all(session)
         return [
             place for place in places
-            if place.ip is not None and 'Nanxing 8.2' in place.name]
+            if place.ip is not None and 'Nanxing 8.' in place.name]
 
 
 if __name__ == "__main__":
