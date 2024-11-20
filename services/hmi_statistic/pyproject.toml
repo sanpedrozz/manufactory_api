@@ -1,0 +1,18 @@
+[tool.poetry]
+name = "hmi-statistic"
+version = "1.0.0"
+description = ""
+authors = ["petrl <sup686@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.13"
+requests = "^2.32.3"
+paho-mqtt = "^2.1.0"
+asyncio = "^3.4.3"
+colorlog = "^6.9.0"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
