@@ -38,6 +38,11 @@ class Settings(BaseSettings):
     API_PORT: str
     API_POSTFIX: str
 
+    #   MQTT
+    MQTT_CLIENT_ID: str
+    MQTT_HOST: str
+    MQTT_PORT: int
+
     @staticmethod
     def _get_postgres_url(user: str, password: str, host: str, db: str) -> PostgresDsn:
         url = f"postgresql+asyncpg://{user}:{password}@{host}/{db}"
