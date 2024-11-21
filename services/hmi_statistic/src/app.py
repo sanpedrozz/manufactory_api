@@ -103,7 +103,7 @@ async def periodic_statistic(client, places, interval=5):
         await asyncio.sleep(interval)  # Задержка между циклами
 
 
-async def periodic_employees(client, places, interval=10):
+async def periodic_employees(client, places, interval=60):
     """Периодически запрашивает и публикует данные сотрудников для заданных мест."""
     while True:
         tasks = [publish_employees(client, place) for place in places]
@@ -113,8 +113,9 @@ async def periodic_employees(client, places, interval=10):
 
 async def main():
     # Получаем список мест
-    statistic_places = [25, 29, 30, 32]
-    all_places = await get_all_places()
+    statistic_places = [25, 32]
+    # all_places = await get_all_places()
+    all_places = [25, 32, 34, 9]
 
     # Создаем MQTT клиент
     client = Client(client_id=settings.MQTT_CLIENT_ID, callback_api_version=CallbackAPIVersion.VERSION2)
