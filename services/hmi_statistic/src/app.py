@@ -10,29 +10,6 @@ from shared.utils.logger import logger
 API = f"http://{settings.API_IP}:{settings.API_PORT}/{settings.API_POSTFIX}"
 
 
-async def get_all_places() -> list:
-    """Получает список мест из API и извлекает их ID."""
-    try:
-        async with aiohttp.ClientSession() as session:
-            async with session.get(f"{API}/places") as response:
-                if response.status != 200:
-                    logger.error(f"Ошибка при получении мест: статус {response.status}")
-                    return []
-
-                data = await response.json()
-
-                # Извлекаем список id из ответа
-                places = data.get("data", [])
-                ids = [place["id"] for place in places if "id" in place]
-                return ids
-    except aiohttp.ClientError as e:
-        logger.error(f"Ошибка при запросе к API: {e}")
-        return []
-    except Exception as e:
-        logger.exception(f"Неожиданная ошибка: {e}")
-        return []
-
-
 async def publish_statistic(mqtt_client, place_id):
     try:
         async with aiohttp.ClientSession() as session:
@@ -114,7 +91,6 @@ async def periodic_employees(client, places, interval=60):
 async def main():
     # Получаем список мест
     statistic_places = [25, 32]
-    # all_places = await get_all_places()
     all_places = [25, 32, 34, 9]
 
     # Создаем MQTT клиент
