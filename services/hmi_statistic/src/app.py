@@ -80,7 +80,7 @@ async def periodic_statistic(client, places, interval=5):
         await asyncio.sleep(interval)  # Задержка между циклами
 
 
-async def periodic_employees(client, places, interval=60):
+async def periodic_employees(client, places, interval=600):
     """Периодически запрашивает и публикует данные сотрудников для заданных мест."""
     while True:
         tasks = [publish_employees(client, place) for place in places]
