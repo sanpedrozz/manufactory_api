@@ -1,13 +1,11 @@
 import asyncio
-import json
 
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from services.plc_data_hub.src.plc import PLCClient, models
+from shared.config import settings
 from shared.db.manufactory.models.models import PLCData
 from shared.utils.logger import logger
-
-DB_NUMBER = 500
 
 
 class Reader:
@@ -28,7 +26,7 @@ class Reader:
         Чтение количества заполненных элементов массива из PLC.
         :return: Количество заполненных элементов.
         """
-        data = self.client.read_data(db_number=DB_NUMBER, offset=0, size=2)
+        data = self.client.read_data(db_number=settings.DB_NUMBER, offset=0, size=2)
         return models['UInt'].read_func(data, 0)
 
     def _get_array(self, filled_array):
@@ -40,7 +38,7 @@ class Reader:
         data_list = []  # Создаем список для хранения всех словарей данных
         # Чтение всех данных одним запросом, если возможно
         for i in range(filled_array):
-            data = self.client.read_data(db_number=DB_NUMBER, offset=2 + 60 * i, size=60)
+            data = self.client.read_data(db_number=settings.DB_NUMBER, offset=2 + 60 * i, size=60)
             data_dict = {
                 'name': models['String[20]'].read_func(data, 0),
                 'type': models['String[30]'].read_func(data, 22),
