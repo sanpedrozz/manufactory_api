@@ -6,7 +6,7 @@ from services.plc_data_hub.src.plc import PLCClient, models
 from shared.config import settings
 from shared.db.manufactory.models.models import PLCData
 from shared.utils.logger import logger
-
+from services.plc_data_hub.src.utils import *
 
 class Reader:
     """Класс для взаимодействия с ПЛК, чтения данных из заданного DB и извлечения информации о типах данных."""
@@ -16,12 +16,14 @@ class Reader:
             raise ValueError("db_session не может быть None")  # Дополнительная проверка
         self.client = PLCClient(ip)
         self.db_session = db_session
-        self.data_buffer = []
-        self.filled_array = 0
-        self.readings = {}
-        self.last_readings = {}
+        self.parameter_list = []
+        self.parameter_count = 0
+        self.current_values = {}
+        self.previous_values = {}
+        self.previous_parameter_count = None
+        self.current_parameter_count = None
 
-    def _get_filled_array(self):
+    async def _fetch_parameters_count(self) -> int:
         """
         Чтение количества заполненных элементов массива из PLC.
         :return: Количество заполненных элементов.
@@ -29,13 +31,13 @@ class Reader:
         data = self.client.read_data(db_number=settings.DB_NUMBER, offset=0, size=2)
         return models['UInt'].read_func(data, 0)
 
-    def _get_array(self, filled_array):
+    async def _fetch_parameters(self, filled_array):
         """
         Чтение данных массива из PLC и преобразует их в список словарей.
         :param filled_array: Количество элементов, которые нужно прочитать.
         :return: Список словарей с информацией о каждом элементе массива.
         """
-        data_list = []  # Создаем список для хранения всех словарей данных
+        data_list = []
         # Чтение всех данных одним запросом, если возможно
         for i in range(filled_array):
             data = self.client.read_data(db_number=settings.DB_NUMBER, offset=2 + 60 * i, size=60)
@@ -49,13 +51,13 @@ class Reader:
             data_list.append(data_dict)
         return data_list
 
-    def read_from_db(self):
+    async def _fetch_plc_data(self):
         """
         Чтение данных из другого DB на основе информации из data_buffer.
         :return: Список словарей со значениями в формате {name: value}.
         """
-        self.readings.clear()  # Очищаем предыдущие значения
-        for entry in self.data_buffer:
+        self.current_values.clear()  # Очищаем предыдущие значения
+        for entry in self.parameter_list:
             name = entry['name']
             db_number = entry['db']
             byte_offset = entry['byte']
@@ -69,18 +71,18 @@ class Reader:
                 data = self.client.read_data(db_number=db_number, offset=byte_offset, size=model.size)
 
                 # Разбираем прочитанные данные
-                self.readings[name] = model.read_func(data, bit_offset)
+                self.current_values[name] = model.read_func(data, bit_offset)
             else:
-                logger.warning(f'Неизвестный тип данных: {data_type}')
+                logger.warning(f"Неизвестный тип данных: {data_type} для параметра {entry['name']}")
 
     async def save_changes(self):
         """
         Сохраняет изменения в базу данных, если значения отличаются от предыдущих.
         """
-        for name, value in self.readings.items():
+        for name, value in self.current_values.items():
             if isinstance(value, list):  # Если это список словарей
-                current_items = value  # Оставляем как есть, если уже словари
-                previous_items = self.last_readings.get(name, [])
+                current_items = compute_hash(value)  # Оставляем как есть, если уже словари
+                previous_items = self.previous_values.get(name, [])
 
                 # Сравниваем элементы списка
                 for current_item in current_items:
@@ -88,29 +90,25 @@ class Reader:
                         new_data = PLCData(name=name, value=str(current_item))
                         await new_data.add(self.db_session)
 
-            elif self.last_readings.get(name) != value:  # Если это не список
+            elif self.previous_values.get(name) != value:  # Если это не список
                 new_data = PLCData(name=name, value=str(value))
                 await new_data.add(self.db_session)
 
         # Обновляем last_readings
-        self.last_readings = self.readings.copy()
+        self.previous_values = self.current_values.copy()
 
     async def run(self):
         """
         Основной цикл чтения данных из PLC.
         """
         with self.client:
-            prev_filled_array = None
 
             while True:
-                # Получаем текущее значение filled_array только один раз за цикл
-                current_filled_array = self._get_filled_array()
-                # Проверяем, изменилось ли значение filled_array
-                if current_filled_array != prev_filled_array:
-                    # Обновляем данные в буфере только если количество заполненных элементов изменилось
-                    self.data_buffer = self._get_array(current_filled_array)
-                    prev_filled_array = current_filled_array
+                self.current_parameter_count = self._fetch_parameters_count()
+                if self.current_parameter_count != self.previous_parameter_count:
+                    self.parameter_list = self._fetch_parameters(self.current_parameter_count)
+                    self.previous_parameter_count = self.current_parameter_count
 
-                self.read_from_db()
+                self._fetch_plc_data()
                 await self.save_changes()
                 await asyncio.sleep(0.1)

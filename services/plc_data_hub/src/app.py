@@ -1,7 +1,7 @@
 import asyncio
 import logging
 
-from services.plc_data_hub.src.core.get_plcs import fetch_places
+from services.plc_data_hub.src.core.utils import fetch_places
 from services.plc_data_hub.src.core.plc_reader import Reader
 from shared.db.manufactory.database import AsyncSessionFactory
 from shared.utils import logger
