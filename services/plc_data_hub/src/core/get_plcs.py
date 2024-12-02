@@ -1,5 +1,3 @@
-import asyncio
-
 from shared.db.manufactory.database import AsyncSessionFactory
 from shared.db.manufactory.models.models import Place
 
@@ -23,9 +21,3 @@ async def fetch_places():
     """
     async with AsyncSessionFactory() as session:
         return await get_filtered_places(session)
-
-
-if __name__ == "__main__":
-    # Запуск асинхронной функции
-    result = asyncio.run(fetch_places())
-    print(result)  # Вывод результата для проверки
