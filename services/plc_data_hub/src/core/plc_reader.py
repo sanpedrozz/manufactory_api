@@ -104,11 +104,11 @@ class Reader:
         with self.client:
 
             while True:
-                self.current_parameter_count = self._fetch_parameters_count()
+                self.current_parameter_count = await self._fetch_parameters_count()
                 if self.current_parameter_count != self.previous_parameter_count:
                     self.parameter_list = self._fetch_parameters(self.current_parameter_count)
                     self.previous_parameter_count = self.current_parameter_count
 
-                self._fetch_plc_data()
+                await self._fetch_plc_data()
                 await self.save_changes()
                 await asyncio.sleep(0.1)

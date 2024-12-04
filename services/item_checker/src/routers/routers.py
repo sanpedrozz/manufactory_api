@@ -63,6 +63,7 @@ async def display_table(request: Request, label_input: str = Form(...)):
 
         table_data.append({
             "label_id": item.label_id,
+            "history_object_id": item.history_object_id,
             "is_preassembled": is_preassembled,
             "edge_info": edge_info,
             "operation_fact": operation_fact
