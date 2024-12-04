@@ -6,7 +6,7 @@ from services.plc_data_hub.src.plc import PLCClient, models
 from shared.config import settings
 from shared.db.manufactory.models.models import PLCData
 from shared.utils.logger import logger
-from services.plc_data_hub.src.utils import *
+
 
 class Reader:
     """Класс для взаимодействия с ПЛК, чтения данных из заданного DB и извлечения информации о типах данных."""
@@ -81,7 +81,7 @@ class Reader:
         """
         for name, value in self.current_values.items():
             if isinstance(value, list):  # Если это список словарей
-                current_items = compute_hash(value)  # Оставляем как есть, если уже словари
+                current_items = value
                 previous_items = self.previous_values.get(name, [])
 
                 # Сравниваем элементы списка
