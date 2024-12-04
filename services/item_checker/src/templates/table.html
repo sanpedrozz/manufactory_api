@@ -13,6 +13,7 @@
         <tr>
             <th>Деталь ID</th>
             <th>ObjectID</th>
+            <th>Размер</th>
             <th>Присадка</th>
             <th>Кромка</th>
             <th>Факт операции</th>
@@ -23,6 +24,7 @@
             <tr>
                 <td>{{ row.label_id }}</td>
                 <td>{{ row.history_object_id }}</td>
+                <td>{{ row.size }}</td>
                 <td>{{ row.is_preassembled }}</td>
                 <td>{{ row.edge_info }}</td>
                 <td>{{ row.operation_fact|safe }}</td>  <!-- Use 'safe' to render HTML for line breaks -->

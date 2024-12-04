@@ -14,6 +14,8 @@ class Item(Base):
     edge_length_2 = Column(Double)
     edge_width_3 = Column(Double)
     edge_width_4 = Column(Double)
+    length_final = Column(Double)
+    width_final = Column(Double)
     plan_set_id = Column(String)
     history_object_id = Column(BigInteger, ForeignKey('industry_operations_history.object_id'))
 
