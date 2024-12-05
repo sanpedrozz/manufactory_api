@@ -6,8 +6,8 @@ body {
 }
 
 .container {
-    width: 80%;
-    max-width: 900px;
+    width: 90%; /* Адаптация для больших экранов */
+    max-width: 100%; /* Позволяет контейнеру растягиваться на весь экран */
     margin: 2rem auto;
     background: white;
     padding: 2rem;
@@ -30,9 +30,10 @@ textarea {
 }
 
 table {
-    width: 100%;
+    width: 100%; /* Занимает всю ширину контейнера */
     border-collapse: collapse;
     margin-top: 1rem;
+    table-layout: auto; /* Динамическая ширина колонок */
 }
 
 table, th, td {
@@ -42,6 +43,7 @@ table, th, td {
 th, td {
     padding: 1rem;
     text-align: left;
+    word-wrap: break-word; /* Перенос слов для длинного текста */
 }
 
 th {
@@ -71,4 +73,15 @@ tr:nth-child(even) {
 form .btn {
     width: 100%;
     margin-top: 1rem;
+}
+
+@media (max-width: 768px) {
+    th, td {
+        font-size: 0.9rem; /* Уменьшение размера текста для маленьких экранов */
+        padding: 0.5rem;
+    }
+
+    .container {
+        padding: 1rem; /* Уменьшение отступов для мобильных устройств */
+    }
 }
