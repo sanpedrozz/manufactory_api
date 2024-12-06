@@ -60,8 +60,20 @@ class DIntDataType(DataType):
 class StringDataType(DataType):
     """Тип данных String с определённым размером, использует get_string из snap7."""
 
+    _cache = {}
+
+    def __new__(cls, size=256):
+        if size in cls._cache:
+            return cls._cache[size]
+        instance = super().__new__(cls)
+        cls._cache[size] = instance
+        return instance
+
     def __init__(self, size=256):
+        if hasattr(self, '_initialized') and self._initialized:
+            return
         super().__init__(f"String[{size}]", size + 2 if size <= 254 else size, get_string)
+        self._initialized = True
 
 
 class ArrayDataType(DataType):
@@ -104,13 +116,11 @@ models = {
 }
 
 models.update({f'String[{i}]': StringDataType(i) for i in range(1, 255)})
-models.update({
-    'Array[1..10] of String[80]': ArrayDataType(StringDataType(80), 1, 10)}
-)
-models.update({
-    'Array[1..10] of String[100]': ArrayDataType(StringDataType(100), 1, 10)}
-)
 
+for size in range(1, 255):
+    models.update({
+        f'Array[1..10] of String[{size}]': ArrayDataType(StringDataType(size), 1, 10)}
+    )
 
 if __name__ == '__main__':
     for key in models:
