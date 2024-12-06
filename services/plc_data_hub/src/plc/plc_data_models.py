@@ -105,7 +105,7 @@ models = {
 
 models.update({f'String[{i}]': StringDataType(i) for i in range(1, 255)})
 models.update({
-    'Array[1..10] of String[80]': ArrayDataType(StringDataType(80), 1, 10)}
+    'Array[1..10] of String[100]': ArrayDataType(StringDataType(100), 1, 10)}
 )
 
 if __name__ == '__main__':
