@@ -5,7 +5,7 @@ import aiohttp
 from paho.mqtt.client import Client, CallbackAPIVersion
 
 from shared.config.config import settings
-from shared.utils.logger import logger
+from shared.utils import logger
 
 API = f"http://{settings.API_IP}:{settings.API_PORT}/{settings.API_POSTFIX}"
 
