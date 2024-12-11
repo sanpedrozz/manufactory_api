@@ -4,7 +4,7 @@ from fastapi import APIRouter, Request, Form
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
 
-from services.item_checker.src.util.main import get_items_info
+from services.item_checker.src.util.utils import get_items_info
 
 router = APIRouter()
 templates = Jinja2Templates(directory="/app/services/item_checker/src/templates")
