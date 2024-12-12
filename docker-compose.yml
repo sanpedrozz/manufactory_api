@@ -29,7 +29,7 @@ services:
     networks:
       - app-network
 
-  manufactory_api_service:
+  api_service:
     restart: always
     build: .
     ports:
