@@ -35,11 +35,8 @@ services:
     ports:
       - "7000:7000"
     networks:
-      - default
+      - app-network
 
 networks:
-  default:
-    name: docker_network
-    external: true
   app-network:
     driver: bridge
